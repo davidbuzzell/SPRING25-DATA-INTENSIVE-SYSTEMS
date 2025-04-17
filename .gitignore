@@ -1,3 +1,4 @@
-**/*.pyc
+*.pyc
 venv/
-**/.env
+homeworks/.env
+__pycache__
