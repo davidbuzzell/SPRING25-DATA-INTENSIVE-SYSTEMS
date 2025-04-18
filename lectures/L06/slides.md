@@ -12,7 +12,7 @@ revealOptions:
   <div style="font-size: 0.8em; left: 0; width: 50%; position: absolute;">
 
   # Data Intensive Systems
-  ## L.05 | OLAP + EDA II
+  ## L.06 | OLAP + EDA II
 
   </div>
   </div>
@@ -29,7 +29,7 @@ revealOptions:
   <div style="font-size: 0.8em; left: 0; width: 60%; position: absolute;">
 
   # Welcome to Data Intensive Systems.
-  ## Please check in by creating an account and entering the code on the chalkboard.
+  ## Please check in by creating an account and entering the provided code.
 
   </div>
   </div>
@@ -42,7 +42,7 @@ revealOptions:
 
 ## Announcements
 
-- 
+- H.02 is due tonight @ 11:59PM.
 
 <!--s-->
 
@@ -51,11 +51,10 @@ revealOptions:
     <div style="font-size: 0.8em; left: 0; width: 60%; position: absolute;">
 
   # Intro Poll
-  ## On a scale of 1-5, how confident are you with **EDA** & **OLAP** concepts such as:
+  ## On a scale of 1-5, how confident are you with **EDA** concepts such as:
 
 - Variance, Covariance, and Correlation
-- Hypothesis Testing
-- Stored Procedures in OLAP Systems
+- Association Analysis
 
   </div>
   </div>
@@ -64,26 +63,6 @@ revealOptions:
   </div>
 
 </div>
-
-<!--s-->
-
-<div class="header-slide">
-
-# OLAP + EDA II
-
-</div>
-
-<!--s-->
-
-## Agenda
-
-### Variance, Covariance, and Correlation
-
-**Scenario**: You are a data analyst at a large e-commerce company. You have been tasked with analyzing the relationship between customer spending and the number of items purchased. You have access to a dataset that contains information on customer spending and the number of items purchased for each transaction.
-
-### Hypothesis Testing
-
-**Scenario**: You are a data analyst at a large e-commerce company. You have been tasked with analyzing the effectiveness of a new marketing campaign. You have access to a dataset that contains information on customer spending before and after the campaign was launched, which is a form of A/B testing.
 
 <!--s-->
 
@@ -150,31 +129,16 @@ revealOptions:
 
 <!--s-->
 
-## Variance
-
-Variance is the average of the squared differences from the mean for a single variable.
-
-$$ \frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^2 $$
-
-<!--s-->
-
 ## Correlation | Quantitative Measurement via Covariance
 
-**Covariance** is a measure of how much two random variables vary together, which is a measure of their **correlation**.
+**Covariance** is a measure of how much two random variables vary together. The covariance between two variables \(X\) and \(Y\) can be defined as:
 
-The covariance between two variables \(X\) and \(Y\) can be defined as:
+$$ \text{cov}(X, Y) = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{n} $$
 
-<div class="col-centered">
-$ \text{cov}(X, Y) = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{n} $
-</div>
-
-And it's really just a generalization of the variance to two variables:
-
-<div class="col-centered">
-
-$ \sigma^2 = \frac{\sum_{i=1}^n (X_i - \mu)^2}{n} $
-
-</div>
+Where:
+- $x_i$ and $y_i$ are the individual data points of variables $X$ and $Y$.
+- $\bar{x}$ and $\bar{y}$ are the means of variables $X$ and $Y$.
+- $n$ is the number of data points.
 
 <!--s-->
 
@@ -216,6 +180,41 @@ $r = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_i (x_i - \bar{x})^2
 
 </div>
 </div>
+
+<!--s-->
+
+## Correlation | Significance
+
+Almost all data can be determined to have a Pearson's correlation coefficient. To determine if the correlation is statistically significant, you can calculate the t-statistic and then find the p-value associated with it.
+
+<div class = "col-wrapper">
+<div class="c1" style = "width: 50%">
+
+### Getting a P Value
+
+The t-statistic is calculated as:
+
+$$ t = \frac{r \sqrt{n - 2}}{\sqrt{1 - r^2}} $$
+
+Where:
+
+- $r$ is the Pearson correlation coefficient.
+- $n$ is the number of data points.
+
+You null hypothesis is that there is no correlation between the two variables, i.e. $r = 0$.
+
+
+</div>
+<div class="c2" style = "width: 50%">
+
+<div style='text-align: center;'>
+   <img src='https://storage.googleapis.com/slide_assets/bad_pearsons.png' style='border-radius: 10px;'>
+   <p style='font-size: 0.6em; color: grey;'>Nickolas 2024</p>
+</div>
+
+</div>
+</div>
+
 
 <!--s-->
 
@@ -355,424 +354,262 @@ B. Spearman's <br>
 
 <div class="header-slide">
 
-# Hypothesis Testing
+# Simpson's Paradox
 
 </div>
 
 <!--s-->
 
-## Common Hypothesis Tests
+## Simpson's Paradox
 
-<div style="font-size: 0.7em;">
+Simpson's Paradox is a phenomenon in probability and statistics, in which a trend appears in different groups of data but **disappears** or **reverses** when these groups are combined.
 
-| Test | Assumptions | Usage (Easy ~ Rule) |
-| --- | --- | --- |
-| t-test | 1. Data are independently and identically distributed. <br> 2. Both groups follow a normal distribution. <br> 3. Variances across groups are approximately equal.* | When comparing the means of two independent groups. |
-| t-test (paired)  | 1. Data are independently and identically distributed. <br> 2. The differences are normally distributed.<br> 3. The pairs are selected randomly and are representative.| When you have pre / post test information on subjects or a matched pairs experiment. |
-| chi-square test of independence | 1. Data are independently and identically distributed. <br> 2. All empirical frequencies are 5 or greater. | When comparing proportions across categories. |
-| One-way ANOVA  | 1. Responses for each group are normally distributed. <br> 2. Variances across groups are approximately equal. <br> 3. Data are independently and identically distributed. | When comparing the means of three or more groups. |
+Recall that correlation measures the strength of a linear relationship between two variables. But, always remember that correlation does not imply causation! 
+
+**Simpson's Paradox** is a situation where a relationship is reversed when the data is split into subgroups.
+
+<img src="https://miro.medium.com/v2/resize:fit:1400/1*8tP_5zRKNAyVSeexu7RJZg.png">
+
+<!--s-->
+
+## Simpson's Paradox | Recovery Rate Example
+
+Which hospital would you rather have surgery in? A or B?
+
+| Hospital | Died | Survived | Death Rate |
+| --- | --- | --- | --- |
+| A | 16 | 784 | 2% |
+| B | 63 | 2037 | 3% |
+
+<!--s-->
+
+## Simpson's Paradox | Recovery Rate Example
+
+If you are in good condition, which hospital would you rather have surgery in? A or B?
+
+| Hospital | Died | Survived | Death Rate |
+| --- | --- | --- | --- |
+| A | 8 | 592 | 1.3% |
+| B | 6 | 594 | 1% |
+
+<!--s-->
+
+## Simpson's Paradox | Recovery Rate Example
+
+If you are in poor condition, which hospital would you rather have surgery in? A or B?
+
+| Hospital | Died | Survived | Death Rate |
+| --- | --- | --- | --- |
+| A | 8 | 192 | 4% |
+| B | 57 | 1443 | 3.8% |
+
+<!--s-->
+
+## Simpson's Paradox | Recovery Rate Example
+
+Let's look at all of the data together. Hospital B has a higher death rate than Hospital A in aggregate. But, when we look at the subgroups, Hospital A has a higher death rate in both subgroups.
+
+<div style="font-size: 0.8em;">
+
+### Overall
+
+| Hospital | Died | Survived | Death Rate |
+| --- | --- | --- | --- |
+| A | 16 | 784 | 2% |
+| B | 63 | 2037 | **3%** |
+
+### Good Condition
+
+| Hospital | Died | Survived | Death Rate |
+| --- | --- | --- | --- |
+| A | 8 | 592 | **1.3%** |
+| B | 6 | 594 | 1% |
+
+### Poor Condition
+
+| Hospital | Died | Survived | Death Rate |
+| --- | --- | --- | --- |
+| A | 8 | 192 | **4%** |
+| B | 57 | 1443 | 3.8% |
 
 </div>
 
 <!--s-->
 
-## Common Hypothesis Tests | T-Test Setup
+## Simpson's Paradox | Linear Regression Example
 
-<div style="font-size: 0.9em">
+Simpson's Paradox can also occur in linear regression or correlation analysis.
 
-### Scenario
-
-Comparing the effect of two medications. Medication A has been used on 40 subjects, having an average recovery time of 8 days, with a standard deviation of 2 days. Medication B (new) has been used on 50 subjects, with an average recovery time of 7 days and a standard deviation of 2.5 days. 
-
-### Hypotheses
-
-- H0: μ1 = μ2 (No difference in mean recovery time)
-- H1: μ1 ≠ μ2 (Difference in mean recovery time)
-
-### Assumptions
-
-- Groups are I.I.D.
-    - I.I.D. stands for independent and identically distributed.
-- Both groups follow a normal distribution.*
-    - Once you have enough samples, the central limit theorem will ensure normality.
-- Equal variances between the two groups (homoscedasticity).*
-    - If variances are not equal, a Welch's t-test can be used.
-
-</div>
+<img src="https://miro.medium.com/v2/resize:fit:1400/1*8tP_5zRKNAyVSeexu7RJZg.png">
 
 <!--s-->
 
-## Common Hypothesis Tests | T-Test Calculation
+## Simpson's Paradox | What Is (Typically) Happening?
 
-<div style="font-size: 0.9em">
-
-### T-Statistic (Equal Variances)
-
-`$$ t = \frac{\bar{x}_1 - \bar{x}_2}{s_p \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} $$`
-
-`$$ s_p = \sqrt{\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}} $$`
-
-Where:
-
-- $\bar{x}_1$ and $\bar{x}_2$ are the sample means.
-- $n_1$ and $n_2$ are the sample sizes.
-- $s_p$ is the pooled standard deviation.
-- $s_1$ and $s_2$ are the sample standard deviations. <br>
-
-### Degrees of Freedom (Equal Variances)
-
-The degrees of freedom for this t-test is calculated as: 
-
-$$ df = n_1 + n_2 - 2 $$
-
-</div>
+1. **Confounding Variables**: The relationship between the variables is influenced by a third variable.
+2. **Sample Size**: The sample size of the subgroups is not large enough to capture the true relationship.
 
 <!--s-->
 
-## Common Hypothesis Tests | T-Test Decision
-
-### Decision Process
-
-1. Compare the computed t-value against the critical t-value from the t-distribution table with $\alpha = 0.05$ and $df$.
-2. If the computed t-value is above the critical t-value, reject the null hypothesis.
-
-<div class="col-centered">
-<img src="https://storage.googleapis.com/slide_assets/t-table.png" style="border-radius: 10px; height: 50%; width: 50%;">
-</div>
-
-<!--s-->
-
-## Common Hypothesis Tests | T-Test (Paired) Setup
-
-### Scenario
-
-A group of 25 patients is measured for cholesterol levels before and after a particular treatment, aiming to evaluate the treatment's effect on cholesterol.
-
-### Hypotheses
-
-- H0: $d=0$ (No difference in mean cholesterol levels)
-- H1: $d \ne 0$ (Difference in mean cholesterol levels)
-
-### Assumptions
-
-- The differences within pairs are independent.
-- The differences are normally distributed.
-- The pairs are selected randomly and are representative.
-
-<!--s-->
-
-## Common Hypothesis Tests | T-Test (Paired) Calculation
-
-### Paired T-Statistic
-
-First, find the difference ($d$) for each pair. Then, calculate the mean ($\bar{d}$) and standard deviation ($s_d$) of those differences.
-
-$$ t = \frac{\bar{d}}{s_d / \sqrt{n}} $$
-
-where $n$ is the number of pairs.
-
-### Degrees of Freedom
-
-Degrees of freedom can be calculated with $df = n - 1$.
-
-<!--s-->
-
-## Common Hypothesis Tests | T-Test (Paired) Decision
-
-### Decision Process
-
-1. Using the t-distribution table with $df = n - 1$, compare the calculated t-value.
-2. If the computed t-value falls within the critical range, reject the null hypothesis.
-
-<div class="col-centered">
-<img src="https://storage.googleapis.com/slide_assets/paired-t-table.png" style="border-radius: 10px; height: 50%; width: 50%;">
-</div>
-
-
-<!--s-->
-
-## Common Hypothesis Tests | Chi-Square Test Setup
-### Scenario
-
-You are conducting an A/B test to evaluate the effectiveness of two website designs (A and B) in driving user engagement. The following data is collected:
-
-| Outcome       | Design A | Design B |
-|---------------|----------|----------|
-| Engaged Users | 15      | 5      |
-| Non-Engaged Users | 5   | 15      |
-
-### Hypotheses
-
-- H0: The engagement rate is independent of the website design.
-- H1: The engagement rate is dependent on the website design.
-
-### Assumptions
-
-- Observations are independent.
-- All expected frequencies are at least 5.
-
-<!--s-->
-
-## L.06 | Q.03
-
-**Question:** Calculate the expected frequency for Adelie penguins on Island A. Assuming the null hypothesis is true, what is the expected frequency?
-
-<div class='col-wrapper' style = "max-height: 50vh;">
-<div class='c1' style = 'width: 50%;'>
-
-| Outcome       | Design A | Design B |
-|---------------|----------|----------|
-| Engaged Users | 15      | 5      |
-| Non-Engaged Users | 5   | 15      |
-
-&emsp;A. 10<br>
-&emsp;B. 5<br>
-&emsp;C. 7.5<br>
-&emsp;D. 12.5<br>
-</div>
-<div class='c2 col-centered' style = 'width: 100%;'>
-<iframe src = "https://drc-cs-9a3f6.firebaseapp.com?label=L.06 | Q.03" width = "80%" height = "100%"></iframe>
-</div>
-</div>
-
-<!--s-->
-
-## Common Hypothesis Tests | Chi-Square Test Calculation
-
-### Chi-Square Statistic
-
-The chi-square statistic of independence is calculated as:
-
-$$\chi^2 = \sum \frac{(O - E)^2}{E}$$
-
-Where:
-- $O$ is the observed frequency.
-- $E$ is the expected frequency, which is calculated as the row total times the column total divided by the grand total.
-
-### Degrees of Freedom
-
-$$df = (r - 1) \times (c - 1)$$
-
-Where:
-- $r$ is the number of rows.
-- $c$ is the number of columns.
-
-<!--s-->
-
-## Common Hypothesis Tests | Chi-Square Test Calculation
-
-### Calculation ($\chi^2$)
-
-$$ \chi^2 = \frac{(15 - 10)^2}{10} + \frac{(5 - 10)^2}{10} + \frac{(5 - 10)^2}{10} + \frac{(15 - 10)^2}{10} = 10 $$
-
-### Degrees of Freedom ($df$)
-
-$$ df = (2 - 1) \times (2 - 1) = 1 $$
-
-<!--s-->
-
-## Common Hypothesis Tests | Chi-Square Test Decision
-
-### Decision Process
-
-1. Compare the $\chi^2$ value against the critical values from the chi-square distribution table with $df$
-2. If $\chi^2 > \chi_{critical}$, reject H0.
-
-<div class="col-centered">
-<img src="https://www.mun.ca/biology/scarr/IntroPopGen-Table-D-01-smc.jpg" style = "border-radius: 10px; height: 40%; width: 40%;">
-</div>
-<p style="text-align: center; font-size: 0.6em; color: grey;">© 2022, Steven M. Carr</p>
-
-<!--s-->
-
-## Common Hypothesis Tests | One-Way ANOVA Setup
-
-### Scenario
-
-You are a manager at a consulting firm evaluating the effectiveness of three different training programs designed to improve employee performance. Each program was implemented with a separate group of employees, and their performance scores were measured after completing the training.
-
-### Hypotheses
-
-- H0: $ \mu_1 = \mu_2 = \mu_3 $ (no difference among the mean performance scores)
-- H1: At least one training program leads to a different mean performance score.
-
-
-### Assumptions
-
-- Groups are I.I.D.
-- Groups follow a normal distribution.
-- Variances across groups are approximately equal.
-    - A good rule of thumb is a ratio of the largest to the smallest variance less than 4.
-
-
-<!--s-->
-
-## Common Hypothesis Tests | One-Way ANOVA Calculation
-
-
-### F-Statistic
-
-Anova breaks down the variance explained by the groups ($SS_{between}$) and the variance not explained by the groups ($SS_{within}$). The F-statistic measures the ratio of the variance between groups to the variance within groups:
-
-$$ F = \frac{SS_{between} / df_{between}}{SS_{within} / df_{within}} $$
-
-The total sum of squares (SS) is calculated as:
-
-$$ s^2 = \frac{SS}{df} = \frac{\sum (x - \bar{x})^2}{n - 1} $$
-
-Where:
-- $SS$ is the sum of squares.
-- $df$ is the degrees of freedom.
-- $x$ is the data point.
-- $\bar{x}$ is the sample mean.
-- $n$ is the sample size.
-
-<!--s-->
-
-## Common Hypothesis Tests | One-Way ANOVA Calculation
-
-### Degrees of Freedom
-
-The degrees of freedom are $df_{between} = k - 1$ and $df_{within} = N - k$.
-
-Where:
-- $k$ is the number of groups.
-- $N$ is the total number of observations.
-
-
-<!--s-->
-
-## Common Hypothesis Tests | One-Way ANOVA Decision
-
-### Decision Process
-
-1. Compare the calculated F-value with the critical F-value from the F-distribution table at $df_{between}$ and $df_{within}$.
-2. Reject H0 if $F > F_{critical}$, indicating significant differences among means.
-
-<div class="col-centered">
-<img src="https://i0.wp.com/statisticsbyjim.com/wp-content/uploads/2022/02/F-table_Alpha05.png?resize=817%2C744&ssl=1" height = "50%" width = "50%" style="border-radius: 10px;">
-</div>
-
-<!--s-->
-
-## Choosing a Non-Parametric Test
-
-If the assumptions for parametric tests are not met, non-parametric tests can be used. 
-
-These tests are distribution-free and do not require the data to be normally distributed. These may make less powerful inferences than parametric tests, because parametric tests derive power from the strong assumptions they make about the shape of the data.
-
-<div style="font-size: 0.8em">
-
-| Test    | Use in place of | Description |
-|-----------------------|------------------|-------------------------|
-| Spearman’s r  | Pearson’s r | For quantitative variables with non-linear relation. |
-| Kruskal–Wallis H  | ANOVA | For 3 or more groups of quantitative data |
-| Mann-Whitney U | Independent t-test  | For 2 groups, different populations. |
-| Wilcoxon Signed-rank  | Paired t-test| For 2 groups from the same population. |
-
-<p style = "text-align: center; color: grey"> © Adapted from Scribbr, 2024 </p>
-
-</div>
-
-<!--s-->
-
-## OLAP | Snowflake
-
-Snowflake does not have built-in functions for hypothesis testing. But, you can use SnowPark. This simple example uses remote resources for the filtering, and local resources for the calculation. It can be run in a notebook running locally.
-
-```python
-
-import snowflake.snowpark as sp
-from snowflake.snowpark import functions as F
-from scipy import stats
-
-def t_test(df, col1, col2):
-    group1 = df.filter(F.col('group') == 'A').select(col1).toPandas()[col1]
-    group2 = df.filter(F.col('group') == 'B').select(col2).toPandas()[col2]
-    t_stat, p_value = stats.ttest_ind(group1, group2)
-    return t_stat, p_value
-
-df = session.table('your_table')
-result = t_test(df, 'column1', 'column2')
-```
-
-<!--s-->
-
-## OLAP | SnowPark
-
-You can also run python scripts in a Snowflake stored procedure. This example uses a stored procedure to calculate the t-test, comparing the means of two groups (column A and column B). This example is nice because it can be run directly in Snowflake and using their scalable resources.
-
-```python
-
-CREATE OR REPLACE PROCEDURE compare_columns_t_test()
-RETURNS VARIANT
-LANGUAGE PYTHON
-RUNTIME_VERSION = '3.8'
-PACKAGES = ('snowflake-snowpark-python', 'scipy')
-HANDLER = 'run'
-AS
-$$
-def run(session):
-    from snowflake.snowpark import functions as F
-    from scipy import stats
-
-    # Load the data
-    df = session.table('your_table')
-
-    # Extract the two groups
-    group_a = df.filter(F.col('group') == 'A').select('column1').to_pandas()['COLUMN1']
-    group_b = df.filter(F.col('group') == 'B').select('column2').to_pandas()['COLUMN2']
-
-    # Perform the t-test
-    t_stat, p_value = stats.ttest_ind(group_a, group_b)
-
-    # Return the results
-    return {"t_statistic": t_stat, "p_value": p_value}
-$$;
-```
-
-```sql
-CALL compare_columns_t_test();
-```
+## Simpson's Paradox | Prevention
+
+1. **Segment Data Carefully**: Understand the context and how data groups are formed.
+2. **Identify Confounders**: Look for variables that might be influencing the results.
+3. **Holistic Approach**: Consider both combined and segmented data analyses.
+4. **Use Visualizations**: Visualizations can help identify patterns and trends.
 
 <!--s-->
 
 <div class="header-slide">
 
-# Summary
+# Association Analysis
 
 </div>
 
 <!--s-->
 
-## Summary
+## Association Analysis | Definition
 
-- **Variance, Covariance, and Correlation**
-    - Variance is the average of the squared differences from the mean.
-    - Covariance is a measure of how much two random variables vary together.
-    - Pearson's correlation coefficient is a standardized measure of the strength of the relationship.
-    - Spearman's rank correlation coefficient is better for non-linear relationships.
-    - OLAP systems (like Snowflake) have built-in functions for calculating correlation coefficients.
-
-- **Hypothesis Testing**
-    - T-Test: Compares the means of two groups.
-    - Paired T-Test: Compares the means of two groups with paired data.
-    - Chi-Square Test: Compares proportions across categories.
-    - One-Way ANOVA: Compares the means of three or more groups.
-    - Stored procedures in OLAP systems can be used to run hypothesis tests.
+Association analysis measures the strength of co-occurrence between one item and another. It is widely applied in retail analysis of transactions, recommendation engines, online clickstream analysis, and more.
 
 <!--s-->
+
+## Association Analysis | Explanation
+
+Given a set of transactions, association analysis finds rules that will predict the occurrence of an item based on the occurrences of other items.
+
+For example, if a customer buys a product, what other products are they likely to buy?
+
+<!--s-->
+
+## Association Analysis | Definitions
+
+- **Itemset**: A collection of one or more items
+  - Example: <span class="code-span">{Milk, Bread, Diaper}</span>
+  - **k-itemset**: An itemset that contains <span class="code-span">k</span> items
+- **Association Rule**: An implication expression of the form <span class="code-span">X --> Y</span>, where <span class="code-span">X</span> and <span class="code-span">Y</span> are itemsets.
+  - Example: <span class="code-span">{Milk, Diaper} --> {Beer}</span>
+
+<!--s-->
+
+## Association Rule | Evaluation
+
+For a rule $ X \rightarrow Y $, where $ X \cap Y = \emptyset $, we can evaluate the rule using the following measures:
+
+- **Support (S)**: Fraction of transactions that contain both X and Y. Where $\(T\)$ is the total number of transactions and $\sigma(X, Y)$ is the number of transactions that contain both $\(X\)$ and $\(Y\)$.
+
+<div class="col-centered" style = "padding: 0.5em;">
+$ S(X \rightarrow Y) = \frac{\sigma(X, Y)}{|T|} $
+</div>
+
+- **Confidence (C)**: Measures how often items in Y appear in transactions that contain X.
+
+<div class="col-centered" style = "padding: 0.5em;">
+$ C(X \rightarrow Y) = \frac{\text{S}(X, Y)}{\text{S}(X)} $
+</div>
+
+- **Lift (L)**: Takes into account the frequency of Y besides the confidence.
+
+<div class="col-centered" style = "padding: 0.5em;">
+$L(X \rightarrow Y) = \frac{S(X, Y)}{S(X)S(Y)}$
+</div>
+
+<!--s-->
+
+## Association Rule | Example
+
+Consider the following transactions:
+
+| TID | Items |
+| --- | --- |
+| 1 | Bread, Milk |
+| 2 | Bread, Diaper, Beer, Eggs |
+| 3 | Milk, Diaper, Beer, Coke |
+| 4 | Bread, Milk, Diaper, Beer |
+| 5 | Bread, Milk, Diaper, Coke |
+
+And the following association rule: <span class="code-span">{Milk, Diaper} --> {Beer}</span>
+
+$ S = \frac{\sigma{\text(Milk, Diaper, Beer)}}{|T|} = \frac{2}{5} = 0.4 $
+
+$ C = \frac{S(Milk, Diaper, Beer)}{S(Milk, Diaper)} = \frac{0.4}{0.6} = 0.67$
+
+$ L = \frac{S(Milk, Diaper, Beer)}{S(Milk, Diaper)S(Beer)} = \frac{0.4}{0.6*0.6} = 1.11 $
+
+
+<!--s-->
+
+## Association Analysis Rule Generation
+
+Given a set of transactions \(T\), the goal of association rule mining is to find all rules having:
+
+- Support $ \geq $ Support threshold
+- Confidence $ \geq $ Confidence threshold
+
+The goal is to find all rules that satisfy these constraints. Lift is often used as a measure of the *interestingness* of the rule. Aka how much more likely is Y given X than if Y were independent of X.
+
+<!--s-->
+
+## Association Analysis Rule Generation | Brute-force Approach
+
+In order to get all of the possible association rules, we would need to:
+
+  - List all possible association rules
+  - Compute the support and confidence for each rule
+  - Prune rules that fail the support or confidence thresholds
+
+But, as with many ideal or simple solutions, this is computationally prohibitive.
+
+<!--s-->
+
+## Association Analysis Rule Generation | Apriori Principle
+
+The Apriori principle is a fundamental concept in association rule mining. It states that if an itemset is frequent, then all of its subsets must also be frequent. 
+
+This principle allows us to reduce the number of itemsets we need to consider when generating association rules, and thus reduce the computational complexity. Modern software implementations will use the Apriori principle to generate association rules.
+
+<div style='text-align: center;'>
+  <img src='https://storage.googleapis.com/slide_assets/apriori.png' style='border-radius: 10px; margin: 0;'>
+  <p style="text-align: center; font-size: 0.6em; color: grey; margin: 0;">Tank, Darshan. (2014)</p>
+</div>
+
+
+<!--s-->
+
+## L.06 | Q.03
+
+What is otherwise defined as the *interestingness* of an association rule?
+
+<div class="col-wrapper">
+<div class="c1 col-centered" style = "width: 50%; padding-bottom: 20%;">
+
+<div style = "line-height: 2em;">
+&emsp;A. Confidence <br>
+&emsp;B. Support <br>
+&emsp;C. Lift <br>
+</div>
+
+</div>
+
+<div class="c2 col-centered" style = "width: 50%;">
+
+<iframe src = "https://drc-cs-9a3f6.firebaseapp.com/?label=L.06 | Q.03" width = "100%" height = "100%"></iframe>
+
+</div>
+</div>
+
+<!--s-->
+
 
 <div class = "col-wrapper">
   <div class="c1 col-centered">
     <div style="font-size: 0.8em; left: 0; width: 60%; position: absolute;">
 
   # Exit Poll
-  ## On a scale of 1-5, how confident are you with **EDA** & **OLAP** concepts such as:
+  ## On a scale of 1-5, how confident are you with **EDA** concepts such as:
 
 - Variance, Covariance, and Correlation
-- Hypothesis Testing
-- Stored Procedures in OLAP Systems
+- Association Analysis
 
   </div>
   </div>
