@@ -51,8 +51,8 @@ def standard_scale_with_numpy(x: np.ndarray) -> np.ndarray:
     Returns:
         numpy.ndarray: Scaled data.
     """
-    raise NotImplementedError("Please implement the standard_scale_with_numpy function in preprocessing.py.")
 
+    return (x - x.mean()) / x.std()
 
 
 def minmax_scale_with_numpy(x: np.ndarray) -> np.ndarray:
@@ -70,8 +70,8 @@ def minmax_scale_with_numpy(x: np.ndarray) -> np.ndarray:
     Returns:
         numpy.ndarray: Scaled data.
     """
-    raise NotImplementedError("Please implement the minmax_scale_with_numpy function in preprocessing.py.")
 
+    return (x - x.min()) / (x.max() - x.min())
 
 
 def binarize_islands(islands: list[str]) -> list[int]:
