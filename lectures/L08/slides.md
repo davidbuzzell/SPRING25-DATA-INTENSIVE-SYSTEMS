@@ -12,7 +12,7 @@ revealOptions:
   <div style="font-size: 0.8em; left: 0; width: 50%; position: absolute;">
 
   # Data Intensive Systems
-  ## L.08 | Distributed Data Processing
+  ## L.08 | EDA IV Searching Text
 
   </div>
   </div>
@@ -29,7 +29,7 @@ revealOptions:
   <div style="font-size: 0.8em; left: 0; width: 60%; position: absolute;">
 
   # Welcome to Data Intensive Systems.
-  ## Please check in by creating an account and entering the code on the chalkboard.
+  ## Please check in by creating an account and entering the provided code.
 
   </div>
   </div>
@@ -42,85 +42,362 @@ revealOptions:
 
 ## Announcements
 
-- 
+- H.03 will be released on Monday, April 28th.
+- Exam Part I will take place on Monday, May 5th.
 
 <!--s-->
 
-<div class="header-slide">
+<div class = "col-wrapper">
+  <div class="c1 col-centered">
+    <div style="font-size: 0.8em; left: 0; width: 60%; position: absolute;">
 
-# Distributed Data Processing
+  # Intro Poll
+  ## On a scale of 1-5, how confident are you with **Text Mining** concepts such as:
+
+  - Regular Expressions
+  - Semantic Search w/ Embeddings
+  - Visualizing Embeddings
+
+  </div>
+  </div>
+  <div class="c2" style="width: 50%; height: 100%;">
+  <iframe src="https://drc-cs-9a3f6.firebaseapp.com/?label=Intro Poll" width="100%" height="100%" style="border-radius: 10px"></iframe>
+  </div>
 
 </div>
 
 <!--s-->
 
-# Agenda
-## Data Processing
-### Creating an ML-Ready Dataset
-### Adding Interaction Terms
-### Transformations
-### Feature Selection
-
-## Distributed Data Processing
-### Creating a SnowFlake Dataset
-
-<!--s-->
-
 <div class="header-slide">
 
-# Data Processing
+# EDA IV
+## Searching Text
 
 </div>
 
 <!--s-->
 
-## Overview
+## Agenda
 
-Often, your goal is to build a complete, numerical matrix with rows (instances) and columns (features).
-
-- **Ideal**: Raw Dataset → Model → Task
-- **Reality**: Raw Dataset → ML-Ready Dataset → Features (?) → Model → Task
-
-Once you have a numerical matrix, you can apply modeling methods to it.
-
-| Student ID | Homework | Exam 1 | Exam 2 | Final |
-|------------|----------|--------|--------|-------|
-| [1,0,...] | 0.90  | 0.89 | 0.70 | 0.93 |
-| [0,1,...] | 0.79 | 0.75| 0.70 | 0.65 |
-| ... | ... | ... | ... | ... |
+- Regular Expressions (Searching for text patterns)
+  - Syntax
+  - Practice
+  - Regex search in SnowFlake
+- Word Embeddings (Searching for semantic meaning)
+  - Traditional (word2vec)
+  - Modern (LLMs)
+  - Plotting embeddings
+  - Semantic search in SnowFlake
 
 <!--s-->
 
-## Overview | From Raw Dataset to ML-Ready Dataset
+<div class="header-slide">
 
-The raw dataset is transformed into a machine learning-ready dataset by converting the data into a format that can be used by machine learning models. This typically involves converting the data into numerical format, removing missing values, and scaling the data.
+# Regular Expressions
 
-Each row should represent an instance (e.g. a student) and each column should represent a consistently-typed and formatted feature (e.g. homework score, exam score). By convention, the final column often represents the target variable (e.g. final exam score).
+</div>
 
-<br><br><br>
+<!--s-->
+
+## Regular Expressions
+
+Regular expressions (regex) are a powerful tool for working with text data. They allow us to search, match, and manipulate text using a concise and expressive syntax.
+
+One may feel compelled to do basic sting manipulation with Python's built-in string methods. However, regular expressions are much more powerful and flexible. Consider the following example:
+
+> "My phone number is (810) 555-1234."
+
+<!--s-->
+
+## Regular Expressions | Example
+
+> "My phone number is (810)555-1234"
+
+### String Methods
+
+<span class="code-span">phone_number = text.split(" ")[-1]</span>
+
+This method would work for the given example but **not** for "My phone number is (810) 555-1234. Call me!"
+or "My phone number is (810) 555-1234. Call me! It's urgent!"
+
+### Regular Expression
+
+<span class="code-span">phone_number = re.search(r'\(\d{3}\)\d{3}-\d{4}', text).group()</span>
+
+This regular expression will match any phone number in the format (810)555-1234, including the additional text above.
+
+<!--s-->
+
+## Regular Expressions | Syntax
+
+Regular expressions are a sequence of characters that define a search pattern. They are used to search, match, and manipulate text strings.
+
+<div style="font-size: 0.8em; overflow-y: scroll; height: 80%;">
+  
+| Pattern | Description |
+|---------|-------------|
+| <span class='code-span'>.</span>     | Matches any character except newline |
+| <span class='code-span'>^</span>     | Matches the start of a string |
+| <span class='code-span'>$</span>     | Matches the end of a string |
+| <span class='code-span'>*</span>     | Matches 0 or more repetitions of the preceding element |
+| <span class='code-span'>+</span>     | Matches 1 or more repetitions of the preceding element |
+| <span class='code-span'>?</span>     | Matches 0 or 1 repetition of the preceding element |
+| <span class='code-span'>{n}</span>   | Matches exactly n repetitions of the preceding element |
+| <span class='code-span'>{n,}</span>  | Matches n or more repetitions of the preceding element |
+| <span class='code-span'>{n,m}</span> | Matches between n and m repetitions of the preceding element |
+| <span class='code-span'>[]</span>    | Matches any one of the characters inside the brackets |
+| <span class='code-span'> \| </span>     | Matches either the expression before or the expression after the operator |
+| <span class='code-span'>()</span>    | Groups expressions and remembers the matched text |
+| <span class='code-span'>\d</span>    | Matches any digit (equivalent to <span class='code-span'>[0-9]</span>) |
+| <span class='code-span'>\D</span>    | Matches any non-digit character |
+| <span class='code-span'>\w</span>    | Matches any word character (equivalent to <span class='code-span'>[a-zA-Z0-9_]</span>) |
+| <span class='code-span'>\W</span>    | Matches any non-word character |
+| <span class='code-span'>\s</span>    | Matches any whitespace character (spaces, tabs, line breaks) |
+| <span class='code-span'>\S</span>    | Matches any non-whitespace character |
+| <span class='code-span'>\b</span>    | Matches a word boundary |
+| <span class='code-span'>\B</span>    | Matches a non-word boundary |
+| <span class='code-span'>\\</span>    | Escapes a special character |
+
+</div>
+
+<!--s-->
+
+## Regular Expressions | Simple
+
+| Pattern  | Description   | Example     | Matches   |
+|----------|-----------|-------------|--------|
+| <span class='code-span'>^abc</span>   | Matches string starting with <span class='code-span'>abc</span>     | <span class='code-span'>abcdef</span>    | <span class='code-span'>abc</span>          |
+| <span class='code-span'>def$</span>   | Matches string ending with <span class='code-span'>def</span>       | <span class='code-span'>abcdef</span>    | <span class='code-span'>def</span>|
+| <span class='code-span'>a.c</span>    | Matches <span class='code-span'>a</span> and <span class='code-span'>c</span> with any char between | <span class='code-span'>abc</span>, <span class='code-span'>a-c</span> | <span class='code-span'>abc</span>, <span class='code-span'>a-c</span>   |
+| <span class='code-span'>a+</span>     | Matches one or more occurrences of <span class='code-span'>a</span> | <span class='code-span'>aaab</span>      | <span class='code-span'>aaa</span>    |
+| <span class='code-span'>colou?r</span>| Matches <span class='code-span'>color</span> or <span class='code-span'>colour</span>   | <span class='code-span'>color</span>, <span class='code-span'>colour</span> | <span class='code-span'>color</span>, <span class='code-span'>colour</span>   |
+| <span class='code-span'>[0-9]</span>  | Matches any digit   | <span class='code-span'>a1b2c3</span>    | <span class='code-span'>1</span>, <span class='code-span'>2</span>, <span class='code-span'>3</span>  |
+| <span class='code-span'>[a-z]</span>  | Matches any lowercase letter  | <span class='code-span'>ABCabc</span>    | <span class='code-span'>a</span>, <span class='code-span'>b</span>, <span class='code-span'>c</span>  |
+| <span class='code-span'>[^a-z]</span> | Matches any char not in set <span class='code-span'>a-z</span>       | <span class='code-span'>ABCabc123</span> | <span class='code-span'>A</span>, <span class='code-span'>B</span>, <span class='code-span'>C</span>, <span class='code-span'>1</span>, <span class='code-span'>2</span>, <span class='code-span'>3</span> |
+| <span class='code-span'>\d</span>     | Matches any digit   | <span class='code-span'>123abc</span>    | <span class='code-span'>1</span>, <span class='code-span'>2</span>, <span class='code-span'>3</span>  |
+| <span class='code-span'>\w+</span>    | Matches one or more word characters     | <span class='code-span'>Hello, world!</span> | <span class='code-span'>Hello</span>, <span class='code-span'>world</span>      |
+
+<!--s-->
+
+## Regular Expressions | Complex
+
+| Pattern      | Description     | Example Input | Matches       |
+|--------------|-------------------------------------------------|-----------------------|---------------|
+| <span class='code-span'>(\d{3}-\d{2}-\d{4})</span> | Matches a Social Security number format | <span class='code-span'>123-45-6789</span> | <span class='code-span'>123-45-6789</span> |
+| <span class='code-span'>(\b\w{4}\b)</span> | Matches any four-letter word    | <span class='code-span'>This is a test</span>      | <span class='code-span'>This</span>, <span class='code-span'>test</span>|
+| <span class='code-span'>(?<=\$)\d+</span> | Matches numbers following a <span class='code-span'>$</span> | <span class='code-span'>Cost: $100</span>  | <span class='code-span'>100</span> |
+| <span class='code-span'>(abc\|def)</span>  | Matches either <span class='code-span'>abc</span> or <span class='code-span'>def</span>   | <span class='code-span'>abcdef</span>      | <span class='code-span'>abc</span>, <span class='code-span'>def</span>  |
+| <span class='code-span'>(?i)regex</span>  | Case-insensitive match for <span class='code-span'>regex</span>      | <span class='code-span'>Regex is fun!</span>       | <span class='code-span'>Regex</span>       |
+
+<!--s-->
+
+## Regular Expressions
+
+Want to practice or make sure your expression works before deploying it? Use an online regex tester!
+
+Live regular expression practice: https://regex101.com/
+
+<!--s-->
+
+## L.08 | Q.01
+
+Which regular expression would match any word that starts with "con" (e.g. captures "conman" but not "icon")?
+
+<div class = 'col-wrapper'>
+<div class='c1' style = 'width: 50%; margin-left: 5%'>
+
+A. <span class='code-span'> con\w+ </span><br><br>
+B. <span class='code-span'> \bcon\w+ </span><br><br>
+C. <span class='code-span'> \bcon\w{3} </span>
+
+</div>
+<div class='c2' style = 'width: 50%;'>
+<iframe src = 'https://drc-cs-9a3f6.firebaseapp.com/?label=L.08 | Q.01' width = '100%' height = '100%'></iframe>
+</div>
+</div>
+
+<!--s-->
+
+## L.08 | Q.02
+
+Which regular expression would match any word that ends with "ing" (e.g. captures "running" but not "ring")?
+
+<div class = 'col-wrapper'>
+<div class='c1' style = 'width: 50%; margin-left: 5%'>
+
+A. <span class='code-span'> ing\b </span><br><br>
+B. <span class='code-span'> \w+ing\b </span><br><br>
+C. <span class='code-span'> \w+ing </span>
+
+</div>
+<div class='c2' style = 'width: 50%;'>
+<iframe src = 'https://drc-cs-9a3f6.firebaseapp.com/?label=L.08 | Q.02' width = '100%' height = '100%'></iframe>
+</div>
+</div>
+
+<!--s-->
+
+## Regex & OLAP
+
+Regular expressions can be used in OLAP queries to search for text patterns in your data. This is a simple and easy form of text mining that can be done directly in your database.
+
+
+<div class = "col-wrapper">
+<div class="c1" style = "width: 50%">
+
+### Snowflake
+
+```sql
+SELECT *
+FROM my_table
+WHERE REGEXP_LIKE(phone_number, '\\(\\d{3}\\)\\d{3}-\\d{4}');
+```
+
+</div>
+<div class="c2" style = "width: 50%">
+
+### BigQuery
+
+```sql
+SELECT *
+FROM my_table
+WHERE REGEXP_CONTAINS(phone_number, r'\(\d{3}\)\d{3}-\d{4}');
+```
+
+</div>
+</div>
+
+<!--s-->
+
+<div class="header-slide">
+
+# Word Embeddings
+
+</div>
+
+<!--s-->
+
+## Regex vs. Embed
+
+Regular expressions are great for searching for text patterns, but they are limited to the syntax and structure of the text. Word embeddings, on the other hand, allow us to search for the *meaning* of words in a document.
+
+For example, what if you wanted to search for "the sport David Beckham played" in a document that only mentions "soccer" and "Manchester United"? No regex pattern would match this query, but a word embedding / semantic search would.
+
+<!--s-->
+
+## Embed
+
+Word embeddings are dense vector representations of words that capture semantic information. Word embeddings are essential for many NLP tasks because they allow us to work with words in a continuous and meaningful vector space.
+
+**Traditional embeddings** such as Word2Vec are static and pre-trained on large text corpora.
+
+**Contextual embeddings** such as those used by BERT and GPT are dynamic and trained on large language modeling tasks.
+
+<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*SYiW1MUZul1NvL1kc1RxwQ.png" style="margin: 0 auto; display: block; width: 80%; border-radius: 10px;">
+<span style="font-size: 0.6em; padding-top: 0.5em; text-align: center; display: block; color: grey;">Google</span>
+
+<!--s-->
+
+## Embed | Traditional Word Embeddings
+
+Word2Vec is a traditional word embedding model that learns word vectors by predicting the context of a word. Word2Vec has two standard architectures:
+
+- **Continuous Bag of Words (CBOW)**. Predicts a word given its context.
+- **Skip-gram**. Predicts the context given a word.
+
+Word2Vec is trained on large text corpora and produces dense word vectors that capture semantic information. The result of Word2Vec is a mapping from words to vectors, where similar words are close together in the vector space.
+
+<img src="https://storage.googleapis.com/slide_assets/word2vec.png" style="margin: 0 auto; display: block; width: 50%; border-radius: 10px;">
+<span style="font-size: 0.6em; padding-top: 0.5em; text-align: center; display: block; color: grey;">Braun 2017</span>
+
+<!--s-->
+
+## Embed | Traditional Word Embeddings
+
+Traditional word embeddings are static and pre-trained on large text corpora. Some of the most popular traditional word embeddings include Word2Vec, GloVe, and FastText.
+
+The static embeddings they generated were very useful, but they have limitations. They do not capture the context in which a word appears, and they do not adapt to the specific language of a document. This is where contextual embeddings come in.
+
+<!--s-->
+
+## L.08 | Q.03
+
+Which of the following statements is true?
+
+<div class = 'col-wrapper'>
+<div class='c1' style = 'width: 50%; margin-left: 5%'>
+
+A. CBOW models predict the context given a word, Skip-gram models predict a word given its context.<br><br>
+B. Skip-gram models predict the context given a word, CBOW models predict a word given its context.<br><br>
+</div>
+<div class='c2' style = 'width: 50%;'>
+<iframe src = 'https://drc-cs-9a3f6.firebaseapp.com/?label=L.08 | Q.03' width = '100%' height = '100%'></iframe>
+</div>
+</div>
+
+<!--s-->
+
+## Embed | Contextual Word Embeddings
+
+Contextual word embeddings are word embeddings that are dependent on the context in which the word appears. Contextual word embeddings are essential for many NLP tasks because they capture the *contextual* meaning of words in a sentence.
+
+For example, the word "bank" can have different meanings depending on the context:
+
+- **"I went to the bank to deposit my paycheck."**
+- **"The river bank was covered in mud."**
+
+[HuggingFace](https://huggingface.co/spaces/mteb/leaderboard) contains a [MTEB](https://arxiv.org/abs/2210.07316) leaderboard for some of the most popular contextual word embeddings:
+
+<img src="https://storage.googleapis.com/cs326-bucket/lecture_14/leaderboard.png" style="margin: 0 auto; display: block; width: 50%;">
+<span style="font-size: 0.6em; padding-top: 0.5em; text-align: center; display: block; color: grey;">HuggingFace, 2024</span>
+
+<!--s-->
+
+## Embed | LLM Overview
+
+Transformers are a type of neural network architecture that has been the foundation of NLP advances in recent years. Transformers are powerful because they can capture long-range dependencies in text and are highly parallelizable. You can use embeddings from any of these architectures as "contextual embeddings."
 
 <div class = "col-wrapper">
 <div class="c1" style = "width: 50%; font-size: 0.8em;">
 
-### Raw Dataset:
+**Encoder-Decoder Models**: T5, BART.
 
-| Student ID | Homework | Exam 1 | Exam 2 | Final |
-|------------|----------|--------|--------|-------|
-| "2549@nw.edu" | 90%| 89% | None | 93% |
-| "7856@nw.edu" | 79%| 75% | 70% | 65% |
-| ... | ... | ... | ... | ... |
+Encoder-decoder models generate text by encoding the input text into a fixed-size vector and then decoding the vector into text. Used in machine translation and text summarization.
+
+**Encoder-Only**: BERT
+
+Encoder-only models encode the input text into a fixed-size vector. These models are powerful for text classification tasks but are not typically used for text generation.
+
+**Decoder-Only**: GPT-4, GPT-3, Gemini 
+
+Autoregressive models generate text one token at a time by conditioning on the previous tokens. Used in text generation, language modeling, and summarization.
 
 </div>
-<div class="c2" style = "width: 50%;  font-size: 0.8em;">
+<div class="c2 col-centered" style = "width: 50%">
 
-### ML-Ready:
+<div>
+<img src="https://substackcdn.com/image/fetch/w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F81c2aa73-dd8c-46bf-85b0-90e01145b0ed_1422x1460.png" style="margin: 0; padding: 0; ">
+<span style="font-size: 0.6em; padding-top: 0.5em; text-align: center; display: block; color: grey;">Vaswani, 2017</span>
+</div>
+</div>
+</div>
 
-| Student ID | Homework | Exam 1 | Exam 2 | Final |
-|------------|----------|--------|--------|-------|
-| [1,0,...] | 0.90  | 0.89 | 0.70 | 0.93 |
-| [0,1,...] | 0.79 | 0.75| 0.70 | 0.65 |
-| ... | ... | ... | ... | ... |
+<!--s-->
 
+## L.08 | Q.04
+
+Which of the following architectures provides a word embedding as the **output**?
+
+<div class = 'col-wrapper'>
+<div class='c1' style = 'width: 50%; margin-left: 5%'>
+
+A. Encoder-Decoder<br><br>
+B. Encoder-Only<br><br>
+C. Decoder-Only<br><br>
+
+</div>
+<div class='c2' style = 'width: 50%;'>
+<iframe src = 'https://drc-cs-9a3f6.firebaseapp.com/?label=L.08 | Q.04' width = '100%' height = '100%'></iframe>
 </div>
 </div>
 
@@ -128,544 +405,161 @@ Each row should represent an instance (e.g. a student) and each column should re
 
 <div class="header-slide">
 
-# Interaction Terms
+# Local Semantic Search Demo
+
+<div style = "margin-left: 15%; margin-right: 15%">
+Before showing you how this works in Snowflake, let's get a firm understanding of how this works in Python.
+</div>
 
 </div>
 
 <!--s-->
 
-## Interaction Terms
+## OLAP Semantic Search | Embed
 
-Interaction terms are used to capture the combined effect of two or more features on the target variable. They are created by multiplying two or more features together.
+Similar to the local example, we can use Snowflake to embed text data. Snowflake's <span class="code-span">SNOWFLAKE.CORTEX.EMBED_TEXT_768</span> model will take a string of text and return a 768-dimensional vector representation of the text.
 
-- **Example**: If you have two features, `x1` and `x2`, the interaction term would be `x1 * x2`.
-- **Why**: Interaction terms can help to capture non-linear relationships between features and the target variable.
-- **How**: You can create interaction terms using the `PolynomialFeatures` class from the `sklearn.preprocessing` module.
+```sql
+-- Create embedding vectors for issues.
+ALTER TABLE issues ADD COLUMN issue_vec VECTOR(FLOAT, 768);
 
-<div class = "col-wrapper">
-<div class="c1" style = "width: 50%;  font-size: 0.8em;">
-
-### ML-Ready:
-
-| Student ID | Homework | Exam 1 | Exam 2 | Final |
-|------------|----------|--------|--------|-------|
-| [1,0,...] | 0.90  | 0.89 | 0.70 | 0.79 |
-| [0,1,...] | 0.79 | 0.75| 0.70 | 0.73 |
-| ... | ... | ... | ... | ... |
-
-
-</div>
-<div class="c2" style = "width: 50%;  font-size: 0.8em;">
-
-### ML-Ready + Interaction Term:
-
-| Student ID | Homework | Exam 1 | Exam 2 | Average Exam Score | Final |
-|------------|----------|--------|--------|---------|-------|
-| [1,0,...] | 0.90  | 0.89 | 0.70 | 0.79 | 0.93 |
-| [0,1,...] | 0.79 | 0.75| 0.70 | 0.74 | 0.65 |
-| ... | ... | ... | ... | ... | ... |
-
-</div>
-</div>
+UPDATE issues
+  SET issue_vec = SNOWFLAKE.CORTEX.EMBED_TEXT_768('snowflake-arctic-embed-m', issue_text);
+```
 
 <!--s-->
 
-## Interaction Terms | PolynomialFeatures
+## OLAP Semantic Search | Embed
 
-PolynomialFeatures generates a new feature matrix consisting of all polynomial combinations of the features with degree less than or equal to the specified degree. For example, if an input sample is two dimensional and of the form 
+Here is an example of how you can use Snowflake to embed a query and then perform a semantic search to find the most relevant wiki article for the query. We'll use this technique later in the course when we build a RAG model / chatbot.
 
-$$[a, b]$$
+```sql
 
-the degree-2 polynomial features are 
+-- Create embedding vectors for issues.
+ALTER TABLE issues ADD COLUMN issue_vec VECTOR(FLOAT, 768);
 
-$$ [1, a, b, a^2, ab, b^2] $$
+UPDATE issues
+  SET issue_vec = SNOWFLAKE.CORTEX.EMBED_TEXT_768('snowflake-arctic-embed-m', issue_text);
 
-this is a very quick way to add interaction terms to your dataset.
+-- Create embedding vector for query.
+SELECT
+  issue,
+  VECTOR_COSINE_SIMILARITY(
+    issue_vec,
+    SNOWFLAKE.CORTEX.EMBED_TEXT_768('snowflake-arctic-embed-m', 'User could not install Facebook app on his phone')
+  ) AS similarity
+FROM issues
+ORDER BY similarity DESC
+LIMIT 5
+WHERE DATEDIFF(day, CURRENT_DATE(), issue_date) < 90 AND similarity > 0.7;
 
-```python
-import numpy as np
-from sklearn.preprocessing import PolynomialFeatures
-X = np.arange(6).reshape(3, 2)
-poly = PolynomialFeatures(degree=2, interaction_only=False,  include_bias=True)
-poly.fit_transform(X)
-```
-
-```
-# Original
-[[0 1]
- [2 3]
- [4 5]]
-```
-
-```
-# Transformed
-array([[ 1.,  0.,  1.,  0.,  0.,  1.],
-       [ 1.,  2.,  3.,  4.,  6.,  9.],
-       [ 1.,  4.,  5., 16., 20., 25.]])
 ```
 
 <!--s-->
 
 <div class="header-slide">
 
-# Transformations
+# Embedding Visualization
 
 </div>
 
 <!--s-->
 
-## Data Transformations
+## Visualization
 
-Here are a number of transformations and feature engineering methods that are common in the data preprocessing stage.
+Let's say you retrieve the word embeddings for a set of words. How can you visualize these embeddings in a way that captures the semantic relationships between the words?
 
-<div style="font-size: 0.75em">
+There are two popular approaches to plotting high-dimensional embeddings in 2D space:
 
-| Type | Transformation | Description |
-|-----------|----------------|-------------|
-| Numerical | Binarization | Convert numeric to binary. |
-| Numerical | Binning | Group numeric values. |
-| Numerical | Log Transformation | Manage data scale disparities. |
-| Numerical | Scaling | Standardize or scale features. |
-| Categorical | One-Hot Encoding | Convert categories to binary columns. |
-| Categorical | Feature Hashing | Compress categories into hash vectors. |
-| Temporal | Temporal Binning & Standardization | Convert to bins, manage time zones. |
-| Temporal | Lag Features | Create lagged variables. |
-| Temporal | Rolling Features | Create rolling averages. |
-| Temporal | Frequency Features | Create frequency-based features. |
-| Text | Chunking | Split text into chunks. |
-| Text | Embedding | Convert text to vectors. |
-| Missing | Drop | Remove missing values. |
-| Missing | Imputation | Fill missing values. [L.02]().|
+- **t-SNE**. t-Distributed Stochastic Neighbor Embedding is a dimensionality reduction technique that captures the local structure of the data.
 
-</div>
+- **PCA**. Principal Component Analysis is a linear dimensionality reduction technique that captures the global structure of the data.
+
+We'll talk more about PCA later, but for now, let's focus on t-SNE.
 
 <!--s-->
 
-## Numerical Data | Binarization
+## t-SNE + Visualization
 
-Convert numerical values to binary values via a threshold. Values above the threshold are set to 1, below threshold are set to 0.
+t-SNE is a powerful technique for visualizing high-dimensional data in 2D space. t-SNE works by modeling the similarity between data points in high-dimensional space and then projecting them into 2D space while preserving the local structure of the data.
 
-```python
-from sklearn.preprocessing import Binarizer
-
-transformer = Binarizer(threshold=3).fit(data)
-transformer.transform(data)
-```
-
-<img src="https://storage.googleapis.com/cs326-bucket/lecture_6/binarized.png" width="800" style="display: block; margin: 0 auto; border-radius: 10px;">
-
-<!--s-->
-
-## Numerical Data | Binning
-
-Group numerical values into bins.
-
-- **Uniform**: Equal width bins. Use this when the data is uniformly distributed.
-- **Quantile**: Equal frequency bins. Use this when the data is not uniformly distributed, or when you want to be robust to outliers.
-
-```python
-from sklearn.preprocessing import KBinsDiscretizer
-
-# uniform binning
-transformer = KBinsDiscretizer(n_bins=5, encode='ordinal', strategy='uniform').fit(data)
-transformer.transform(data)
-
-# quantile binning
-transformer = KBinsDiscretizer(n_bins=5, encode='ordinal', strategy='quantile').fit(data)
-transformer.transform(data)
-```
-
-<!--s-->
-
-## Numerical Data | Binning
-
-<img src="https://storage.googleapis.com/cs326-bucket/lecture_6/binning.png" style="display: block; margin: 0 auto; border-radius: 10px;">
-
-<!--s-->
-
-## Numerical Data | Log Transformation
-
-Logarithmic transformation of numerical values. This is useful for data with long-tailed distributions, or when the scale of the data varies significantly.
-
-
-```python
-import numpy as np
-transformed = np.log(data)
-```
-
-<br><br>
-
-<img src="https://storage.googleapis.com/slide_assets/long-tail.png" width="500" style="display: block; margin: 0 auto;">
-<p style="text-align: center; font-size: 0.6em; color: grey;">Komorowski, 2016</p>
-
-
-<!--s-->
-
-## Numerical Data | Scaling
-
-Standardize or scale numerical features.
-
-- **MinMax**: Squeeze values into [0, 1].
-
-$$ x_{\text{scaled}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} $$
-
-- **Standard**: Standardize features to have zero mean and unit variance:
-
-$$ x_{\text{scaled}} = \frac{x - \mu}{\sigma} $$
-
-```python
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
-
-# min-max scaling
-scaler = MinMaxScaler().fit(data)
-scaler.transform(data)
-
-# standard scaling
-scaler = StandardScaler().fit(data)
-scaler.transform(data)
-```
-
-<!--s-->
-
-## Numerical Data | Scaling
-
-| Method | Pros | Cons | When to Use | 
-|--------|------|------| ------------|
-| MinMax | Bounded between 0 and 1. | Sensitive to outliers | When the data is uniformly distributed. |
-| Standard | More robust to outliers. | Not bounded. | When the data is normally distributed. |
-
-**A special note on training / testing sets** -- always fit the scaler on the training set and transform both the training and testing sets using those parameters. This ensures that the testing set is not used to influence the training set.
-
-<!--s-->
-
-## Numerical Data | Why Scale Data?
-
-### Convergence
-Some models (like SVMs and neural networks) converge faster when the data is scaled. Scaling the data can help the model find the optimal solution more quickly.
-
-### Performance
-Some models (like KNN) are sensitive to the scale of the data. Scaling the data can improve the performance of these models. Consider the KNN model -- if the data is not scaled, the model will give more weight to features with larger scales.
-
-### Regularization
-Regularization methods (like L1 and L2 regularization) penalize large coefficients. If the features are on different scales, the regularization term may penalize some features more than others.
-
-<!--s-->
-
-## Categorical Data | One-Hot Encoding
-
-Convert categorical features to binary columns. This will create a binary column for each unique value in the data. For example, the color feature will be transformed into three columns: red, green, and blue.
-
-```python
-from sklearn.preprocessing import OneHotEncoder
-
-data = [["red"], ["green"], ["blue"]]
-encoder = OneHotEncoder().fit(data)
-encoder.transform(data)
-```
-
-
-```
-array([[0., 0., 1.],
-       [0., 1., 0.],
-       [1., 0., 0.]])
-```
-
-<!--s-->
-
-## Categorical Data | Feature Hashing
-
-Compress categorical features into hash vectors -- in other words, this method reduces the dimensionality of the feature space. Hashing is using a function that maps categorical values to fixed-length vectors.
-
-Compared to one-hot encoding, feature hashing is more memory-efficient and can handle high-dimensional data. It is typically used when some categories are unknown ahead of time, or when the number of categories is very large.
-
-However, it can lead to collisions, where different categories are mapped to the same column. In this case below, we are hashing the color feature into a 2-dimensional vector. 
-
-
-```python
-from sklearn.feature_extraction import FeatureHasher
-
-data = [{"color": "red"}, {"color": "green"}, {"color": "blue"}]
-hasher = FeatureHasher(n_features=2, input_type='dict').fit(data)
-hasher.transform(data)
-```
-
-```
-array([[-1,  0],
-       [ 0,  1],
-       [ 1,  0]])
-```
-
-<!--s-->
-
-## L.06 | Q.01
-
-<div class='col-wrapper' style = 'display: flex; align-items: top;'>
-<div class='c1' style = 'width: 60%; display: flex; flex-direction: column;'>
-
-You are working with a dataset that contains a feature with 100 unique categories. You are unsure if all categories are present in the training set, and you want to reduce the dimensionality of the feature space. Which method would you use?
-
-<div style = 'line-height: 2em;'>
-&emsp;A. One-Hot Encoding <br>
-&emsp;**B. Feature Hashing** <br>
-</div>
-</div>
-<div class="c2" style="width: 50%; height: 100%;">
-<iframe src="https://drc-cs-9a3f6.web.app/?label=L.06 | Q.01" width="100%" height="100%" style="border-radius: 10px"></iframe>
-</div>
-</div>
-
-<!--s-->
-
-## Temporal Data | Temporal Granularity
-
-Converting temporal features to bins based on the required granularity for your model helps manage your time series data. For example, you can convert a date feature to year / month / day, depending on the required resolution of your model.
-
-We'll cover more of time series data handling in our time series analysis lecture -- but pandas has some great tools for this!
-
-```python
-import pandas as pd
-
-data = pd.DataFrame({"date": ["2021-01-01", "2021-02-01", "2021-03-01"]})
-data["date"] = pd.to_datetime(data["date"])
-data["month"] = data["date"].dt.month
-data["day"] = data["date"].dt.day
-
-```
-
-date|month|day
----|---|---
-2021-01-01|1|1
-2021-02-01|2|1
-2021-03-01|3|1
-
-<!--s-->
-
-## Temporal Data | Lag Features
-
-Lag features are used to create new features based on previous values of a time series. This is useful for capturing temporal dependencies in the data.
+Here is an example of how you can use t-SNE to visualize word embeddings in Python:
 
 <div class = "col-wrapper">
 <div class="c1" style = "width: 50%">
 
 ```python
+from sklearn.manifold import TSNE
+import plotly.express as px
 
-import pandas as pd
+# Generate word embeddings.
+# ---
 
-data = pd.DataFrame({"date": ["2021-01-01", "2021-02-01", "2021-03-01"], "value": [1, 2, 3]})
-data["date"] = pd.to_datetime(data["date"])
+# Fit t-SNE model.
+tsne = TSNE(n_components=2, random_state=0, perplexity=30)
+embeddings_2d = tsne.fit_transform(embeddings)
 
-data["lag_1"] = data["value"].shift(1)
-data["lag_2"] = data["value"].shift(2)
+# Plot embeddings.
+px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1])
 ```
 
 </div>
 <div class="c2" style = "width: 50%">
 
-date|value|lag_1|lag_2
----|---|---|---
-2021-01-01|1|NaN|NaN
-2021-02-01|2|1.0|NaN
-2021-03-01|3|2.0|1.0
+<div style='text-align: center;'>
+   <img src='https://miro.medium.com/v2/resize:fit:4800/format:webp/0*OFEG6lda-nRTLVYs' style='border-radius: 10px;'>
+   <p style='font-size: 0.6em; color: grey;'>Smetanin 2018</p>
+</div>
 
 </div>
 </div>
 
 <!--s-->
 
-## Temporal Data | Rolling Features
+## t-SNE | Results
 
-Rolling features are used to create new features based on the rolling average of a time series. This is useful for smoothing out noise in the data.
+<div style='text-align: center;'>
+   <img src='https://miro.medium.com/v2/resize:fit:4800/format:webp/0*quUwP6EqEhFmNAqX' style='border-radius: 10px;'>
+   <p style='font-size: 0.6em; color: grey;'>Smetanin 2018</p>
+</div>
+
+<!--s-->
 
 <div class = "col-wrapper">
+  <div class="c1 col-centered">
+    <div style="font-size: 0.8em; left: 0; width: 60%; position: absolute;">
 
-<div class="c1" style = "width: 50%">
+  # Midterm Feedback
 
-```python
-import pandas as pd
-data = pd.DataFrame({"date": ["2021-01-01", "2021-02-01", "2021-03-01"], "value": [1, 2, 3]})
-data["date"] = pd.to_datetime(data["date"])
-data["rolling_mean"] = data["value"].rolling(window=2).mean()
-```
-</div>
-<div class="c2" style = "width: 50%">
-date|value|rolling_mean
----|---|---
-2021-01-01|1|NaN
-2021-02-01|2|1.5
-2021-03-01|3|2.5
-</div>
+  How are things going in MBAI 417? Please provide any feedback or suggestions for improvement, and I'll do my best to accommodate for future lectures. 
+
+  </div>
+  </div>
+  <div class="c2" style="width: 50%; height: 100%;">
+  <iframe src="https://drc-cs-9a3f6.firebaseapp.com/?label=Midterm Feedback" width="100%" height="100%" style="border-radius: 10px"></iframe>
+  </div>
 
 </div>
 
 <!--s-->
-
-## Temporal Data | Frequency Features
-
-Sometimes, we have time series data that is noisy. We can utilize filtering methods to create new features based on the frequency of the data. Here is an example of cleaning up a noisy sine wave with a low-pass filter.
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-import scipy.signal as signal
-
-x = np.linspace(0, 10, 100)
-y = np.sin(x) + np.random.normal(0, 0.1, 100)
-b, a = signal.butter(3, 0.1) # 3rd order butterworth filter.
-y_filtered = signal.filtfilt(b, a, y)
-plt.plot(x, y, label='Noisy')
-plt.plot(x, y_filtered, label='Filtered')
-plt.legend()
-```
-<!--s-->
-
-## Text Data | Chunking
-
-Chunking is the process of splitting text into smaller, more manageable pieces. This is useful for processing large amounts of text data. NLTK has a built-in chunking function that can be used to split text into sentences or words. We talked about chunking in L.07.
-
-```python
-
-import nltk
-from nltk import sent_tokenize, word_tokenize
-
-text = "This is a sentence. This is another sentence."
-sentences = sent_tokenize(text)
-words = [word_tokenize(sentence) for sentence in sentences]
-```
-
-<!--s-->
-
-## Text Data | Embedding
-
-Embedding is the process of converting text into numerical vectors. This is useful for processing text data with machine learning models, because we can use the embeddings as features. We talked about embeddings in L.07.
-
-```python
-import openai
-import numpy as np
-import pandas as pd
-
-data = pd.DataFrame({"text": ["This is a sentence.", "This is another sentence."]})
-data["embedding"] = data["text"].apply(lambda x: np.array(openai.Embedding.create(input=x, model="text-embedding-ada-002")["data"][0]["embedding"]))
-```
-<!--s-->
-
-## Missing Data | Drop
-
-Dropping missing values is the simplest method for handling missing data. However, this can lead to loss of information and bias in the data.
-
-```python
-
-import pandas as pd
-
-data = pd.DataFrame({"A": [1, 2, None], "B": [4, 5, 6]})
-data.dropna()
-```
-
-<!--s-->
-
-## Missing Data | Imputation
-
-We covered imputation in more detail in [L.0X]().
-
-<div style = "font-size: 0.85em;">
-
-
-| Method | Description | When to Use |
-| --- | --- | --- |
-| Forward / backward fill | Fill missing value using the last / next valid value. | Time Series |
-| Imputation by interpolation | Use interpolation to estimate missing values. | Time Series |
-| Mean value imputation | Fill missing value with mean from column. | Random missing values |
-| Conditional mean imputation | Estimate mean from other variables in the dataset. | Random missing values |
-| Random imputation | Sample random values from a column. | Random missing values | 
-| KNN imputation | Use K-nearest neighbors to fill missing values. | Random missing values |
-| Multiple Imputation | Uses many regression models and other variables to fill missing values. | Random missing values |
-
-</div>
-
-<!--s-->
-
-<div class="header-slide">
-
-# Feature Selection
-
-</div>
-
-<!--s-->
-
-## Feature Selection | Chi-Squared
-
-One method to reduce dimensionality is to choose relevant features based on their importance for classification. The example below uses the chi-squared test to select the 20 best features. 
-
-This works by selecting the features that are least likely to be independent of the class label (i.e. the features that are most likely to be relevant for classification).
-
-
-```python
-from sklearn.datasets import load_digits
-from sklearn.feature_selection import SelectKBest, chi2
-
-X, y = load_digits(return_X_y=True)
-X_new = SelectKBest(chi2, k=20).fit_transform(X, y)
-```
-
-<!--s-->
-
-## Feature Selection | Random Forest
-
-Another way is to reduce the feature space using modeling methods. The example below uses a random forest classifier to select the most important features. 
-
-This works because the random forest model is selecting the features that are most likely to be important for classification. We'll cover random forests in more detail in a future lecture.
 
 <div class = "col-wrapper">
-<div class="c1" style = "width: 50%">
+  <div class="c1 col-centered">
+    <div style="font-size: 0.8em; left: 0; width: 60%; position: absolute;">
 
-<img src="https://miro.medium.com/v2/resize:fit:1010/1*R3oJiyaQwyLUyLZL-scDpw.png" width="300" style="display: block; margin: 0 auto; border-radius: 10px;">
-<p style="text-align: center; font-size: 0.6em; color: grey;">Deniz Gunay, 2023</p>
+  # Exit Poll
+  ## On a scale of 1-5, how confident are you with **Text Mining** concepts such as:
 
-</div>
-<div class="c2" style = "width: 70%">
+  - Regular Expressions
+  - Semantic Search w/ Embeddings
+  - Visualizing Embeddings
 
-```python
-from sklearn.datasets import load_digits
-from sklearn.feature_selection import SelectFromModel
-from sklearn.ensemble import RandomForestClassifier
-
-X, y = load_digits(return_X_y=True)
-X_new = SelectFromModel(RandomForestClassifier()).fit_transform(X, y)
-```
-
-</div>
-</div>
-
-<!--s-->
-
-<div class="header-slide">
-
-# Distributed Data Processing
+  </div>
+  </div>
+  <div class="c2" style="width: 50%; height: 100%;">
+  <iframe src="https://drc-cs-9a3f6.firebaseapp.com/?label=Exit Poll" width="100%" height="100%" style="border-radius: 10px"></iframe>
+  </div>
 
 </div>
 
 <!--s-->
-
-## Distributed Data Processing
-
-> Update to use Stored Procedures. Maybe something named "create-dataset-v1" that takes in a raw dataset and outputs a ML-ready dataset.
-
-Often, your dataset is too large to fit into memory. In this case, you can use distributed data processing methods to handle the data. Since this process can require a lot of resources, you often want a checkpoint dataset to save your progress. Here is a reasonable best-practice workflow:
-
-Step 1: Collect raw data sources in to a cloud storage bucket. Or, if compatible, a columnar database like Snowflake.
-
-Step 2: Using a distributed data processing framework (like Snowflake, Spark, or Dask), create a dataset from the raw data sources.
-
-Step 3: Save the dataset to a cloud storage bucket. Or, if compatible, a columnar database like Snowflake. Saving the dataset has a couple of purposes. 1. It's a system of version control. 2. It allows you to share with others.
-
-<!--s-->
-
-## Distributed Data Processing | Snowflake Homework
-
-We're going to create a Dataset in Snowflake that illistrates some of the methods covered in this lecture.
-
-<!--s-->
-
-
-
-
-
