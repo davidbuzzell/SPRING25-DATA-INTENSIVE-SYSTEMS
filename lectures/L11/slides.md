@@ -12,7 +12,7 @@ revealOptions:
   <div style="font-size: 0.8em; left: 0; width: 50%; position: absolute;">
 
   # Data Intensive Systems
-  ## L.11 | Regression & Classification
+  ## L.11 | Containerization
 
   </div>
   </div>
@@ -29,22 +29,30 @@ revealOptions:
   <div style="font-size: 0.8em; left: 0; width: 60%; position: absolute;">
 
   # Welcome to Data Intensive Systems.
-  ## Please check in by creating an account and entering the code on the chalkboard.
+  ## Please check in by creating an account and entering the provided code.
 
   </div>
   </div>
   <div class="c2 col-centered" style = "bottom: 0; right: 0; width: 40%; padding-top: 5%">
-    <iframe src = "https://drc-cs-9a3f6.web.app?label=Check In" width = "100%" height = "100%"></iframe>
+    <iframe src = "https://drc-cs-9a3f6.firebaseapp.com/?label=Check In" width = "100%" height = "100%"></iframe>
   </div>
 </div>
 
 <!--s-->
 
-## Announcements
+# DIS Case | Onboarding
 
-- 
+**Overview**: Currently, onboarding new employees at a data science company is taking several days. You hear several reports of new employees having difficulty installing the company's programming environment, but it's okay because they "found a workaround" or "hacked something together that works for now". The environment is mostly programming in Python, and the company has a lot of dependencies that are difficult to install. The company is also using a lot of different tools with conflicting versions, and the new employees are having trouble keeping track of everything.
+
+**Problem Statement**: You need to set up an environment that is easy to install and use by new employees. What can you do? How would you set up your environment?
 
 <!--s-->
+
+# DIS Case | Deployment
+
+**Overview**: You just trained the hottest and latest regression model on the market for predicting house prices. This model was trained locally on your laptop, but you need to deploy it so that others can use it. 
+
+**Problem Statement**: You need to find a way to deploy the model so that it can be used by anyone, anywhere. How would you do this? What tools would you use to deploy your model?
 
 <!--s-->
 
@@ -53,11 +61,7 @@ revealOptions:
     <div style="font-size: 0.8em; left: 0; width: 60%; position: absolute;">
 
   # Intro Poll
-  ## On a scale of 1-5, how confident are you with the following methods:
-
-  1. Linear Regression
-  2. Logistic Regression
-  3. k-Nearest Neighbors (KNN)
+  ## On a scale of 1-5, how confident are you with working with Docker?
 
   </div>
   </div>
@@ -69,480 +73,483 @@ revealOptions:
 
 <!--s-->
 
-## Supervised Machine Learning
+<div class="header-slide">
 
-Supervised machine learning is a type of machine learning where the model is trained on a labeled dataset. Assume we have some features $X$ and a target variable $y$. The goal is to learn a mapping from $X$ to $y$.
+# Containerization with Docker
 
-$$ y = f(X) + \epsilon $$
-
-Where $f(X)$ is the true relationship between the features and the target variable, and $\epsilon$ is a random error term. The goal of supervised machine learning is to estimate $f(X)$.
-
-`$$ \widehat{y} = \widehat{f}(X) $$`
-
-Where $\widehat{y}$ is the predicted value and $\widehat{f}(X)$ is the estimated function.
+</div>
 
 <!--s-->
 
-## Supervised Machine Learning
+## Docker | Agenda
 
-To learn the mapping from $X$ to $y$, we need to define a model that can capture the relationship between the features and the target variable. The model is trained on a labeled dataset, where the features are the input and the target variable is the output.
+<div class = "col-wrapper" style = "height: 70%;">
+<div class="c1" style = "width: 70%">
 
-- Splitting Data
-  - Splitting data into training, validation, and testing sets.
-- Linear Regression
-  - Fundamental regression algorithm.
-- Logistic Regression
-  - Extension of linear regression for classification.
-- k-Nearest Neighbors (KNN)
-  - Fundamental classification algorithm.
+1. Why Containerization?
+2. What is Docker and Why is it Useful?
+3. Benefits of Using Docker
+4. Docker Theory
+5. Using Docker
+6. Docker Demo
 
-<!--s-->
+</div>
+<div class="c2" style = "width: 30%">
 
-## Splitting Data into Training, Validation, and Testing Sets
+<img src="https://raw.githubusercontent.com/docker-library/docs/c350af05d3fac7b5c3f6327ac82fe4d990d8729c/docker/logo.png" width="100%">
 
-Splitting data into training, validation, and testing sets is crucial for model evaluation and selection.
+</div>
 
-- **Training Set**: Used for fitting the model.
-- **Validation Set**: Used for parameter tuning and model selection.
-- **Test Set**: Used to evaluate the model performance.
+</div>
 
-A good, general rule of thumb is to split the data into 70% training, 15% validation, and 15% testing. In practice, k-fold cross-validation is often used to maximize the use of data. We will discuss this method in future lectures.
-
-<img src="https://miro.medium.com/v2/resize:fit:1160/format:webp/1*OECM6SWmlhVzebmSuvMtBg.png" width="500" style="margin: 0 auto; display: block;">
-<p style="text-align: center; font-size: 0.6em; color: grey;">Chavan, 2023</p>
+> <span style="font-style: normal;"> Vocabulary will be placed in boxes. </span>
 
 <!--s-->
 
-## Methods of Splitting
+## Why Containerization?
+
+A **container** is a lightweight, portable, and efficient way to package applications and their dependencies. Containers isolate applications from the host system and other containers, making them easier to deploy and manage.
+
+| **Container** | **Virtual Machine** |
+|---------------|---------------------|
+| Lightweight | Heavyweight |
+| Faster startup | Slower startup |
+| Less resource usage | More resource usage |
+| Shared kernel | Separate kernel |
+
+> <span style="font-style: normal;"> The **kernel** is the core of an operating system that manages system resources. </span>
+
+> <span style="font-style: normal;"> **Virtual machines** are software emulations of physical computers that run an operating system and applications. </span>
+
+<!--s-->
+
+## What is Docker and Why is it Useful?
+
+**Docker** is an open-source platform designed to simplify the process of creating, deploying, and running applications. You can think of Docker as a self-contained package that includes everything an application needs to run: the code, runtime, system tools, libraries, and settings. 
+
+This package is called a **image**. When you run an image, it creates a **container**, an isolated environment that runs the application.
+
+> <span style="font-style: normal;">An **image** is a snapshot of an application and its dependencies. </span>
+
+> <span style="font-style: normal;">A **container** is a running instance of an image. </span>
+
+<!--s-->
+
+## Benefits of Using Docker
+
+1. Consistency Across Environments
+
+2. Efficiency
+
+3. Scalability
+
+4. Isolation and Security
+
+<!--s-->
+
+## Benefits of Using Docker | Consistency
+
+<div class = "col-wrapper" style = "height: 70%;">
+<div class="c1" style = "width: 50%;">
+
+Docker ensures that software behaves the same on every machine. Developers can be confident that applications that work on their computers will work in production.
+
+Docker containers are typically based on a Linux distribution, which provides a consistent environment for applications.
+
+</div>
+<div class="c2" style = "width: 50%">
+
+<img src = "https://miro.medium.com/v2/resize:fit:1400/0*Qqqd7UsfFDPL7WXh.jpeg" width="100%">
+
+</div>
+</div>
+
+> <span style="font-style: normal;"> **Linux** distributions: Variants of the Linux operating system. Linux is by far the most popular OS in the world for web servers, cloud computing, and supercomputers. </span>
+ 
+<!--s-->
+
+## Benefits of Using Docker | Efficiency
+
+
+Containers share the host's operating system kernel, which makes them more lightweight and efficient than traditional virtual machines.
+
+This results in faster application delivery, reduced resource consumption, and lower overhead.
+
+
+<img src="https://www.docker.com/wp-content/uploads/2022/12/admins-ask-about-docker-2.png" width="100%">
+<p style="text-align: center; font-size: 0.6em; color: grey;">Docker 2022</p>
+
+<!--s-->
+
+## Benefits of Using Docker | Scalability
+
+Docker makes it easy to scale applications horizontally by adding more containers. This supports modern cloud-native development practices.
+
+Containers can be easily replicated and distributed across multiple hosts, providing flexibility and scalability.
+
+<img src = "https://miro.medium.com/v2/resize:fit:1400/1*MzGIkBAGQwUyN2-Rs9opfA.jpeg" width="100%" style = "border-radius: 10px;">
+<p style="text-align: center; font-size: 0.6em; color: grey;">Thakur 2024</p>
+
+<!--s-->
+
+## Benefits of Using Docker | Isolation and Security
+
+<div class = "col-wrapper">
+<div class="c1" style = "width: 50%">
+
+Containers encapsulate applications and their dependencies completely, providing isolation that improves security.
+
+</div>
+<div class="c2" style = "width: 50%">
+
+<img src="https://joeeey.com/static/c161c59028d1e817d0cdce747b9e79e7/d8bb9/covers.png" width="100%" style = "border-radius: 10px;">
+<p style="text-align: center; font-size: 0.6em; color: grey;">Miller 2023</p>
+
+</div>
+</div>
+
+<!--s-->
+
+
+## Docker Architecture
+
+
+<img src="https://miro.medium.com/v2/resize:fit:1400/0*G82uZfX0ozIih3-_" width="100%" style = "border-radius: 10px;">
+<p style="text-align: center; font-size: 0.6em; color: grey;">NordicAPIs</p>
+
+<!--s-->
+
+## Docker Architecture | Key Docker Components
+
+<div class = "col-wrapper">
+<div class="c1" style = "width: 50%">
+
+- Docker Daemon
+
+- Docker Client
+
+- Docker Images
+
+- Docker Containers
+
+- Docker Registries
+
+- Namespaces and Control Groups
+
+</div>
+<div class="c2" style = "width: 50%">
+
+<img src="https://miro.medium.com/v2/resize:fit:1400/0*G82uZfX0ozIih3-_" width="100%" style = "border-radius: 10px;">
+<p style="text-align: center; font-size: 0.6em; color: grey;">NordicAPIs</p>
+
+</div>
+</div>
+
+<!--s-->
+
+## Docker Architecture | Daemon
+
+The **Docker Daemon** (`dockerd`) is the heart of Docker, responsible for running containers on a host. It listens for API requests and manages Docker objects (images, containers, networks, etc.).
 
 <div class = "col-wrapper">
 
-<div class="c1" style = "width: 60%; font-size: 0.8em;">
+<div class="c1" style = "width: 50%">
 
-### Random Split
-Ensure you shuffle the data to avoid bias. Important when your dataset is ordered.
-
-### Stratified Split
-Used with imbalanced data to ensure each set reflects the overall distribution of the target variable. Important when your dataset has a class imbalance.
-
-### Time-Based Split
-Used for time series data to ensure the model is evaluated on future data. Important when your dataset is time-dependent.
-
-### Group-Based Split
-Used when data points are not independent, such as in medical studies. Important when your dataset has groups of related data points.
+<img src="https://miro.medium.com/v2/resize:fit:1400/0*G82uZfX0ozIih3-_" height="50%" style = "border-radius: 10px;">
+<p style="text-align: center; font-size: 0.6em; color: grey;">NordicAPIs</p>
 
 </div>
 
-<div class="c2 col-centered" style = "width: 40%;">
+<div class="c2" style = "width: 50%">
 
-```python
-from sklearn.model_selection import train_test_split
+> <span style="font-style: normal;"> A **daemon** is a background process that runs continuously, waiting for requests to process. </span>
 
-X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
-X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+</div>
+
+</div>
+
+
+<!--s-->
+
+## Docker Architecture | Client
+
+The **Docker Client** is a command-line tool (CLI) used by the user to interact with the Docker daemon. 
+
+<div class = "col-wrapper">
+<div class="c1" style = "width: 50%">
+
+Common CLI commands include <span class="code-span">docker pull</span>, <span class="code-span">docker build</span>, and <span class="code-span">docker run</span>. The client sends commands to the daemon, which executes them on the host.
+
+</div>
+<div class="c2" style = "width: 50%">
+
+<img src="https://miro.medium.com/v2/resize:fit:1400/0*G82uZfX0ozIih3-_" width="100%" style = "border-radius: 10px;">
+<p style="text-align: center; font-size: 0.6em; color: grey;">NordicAPIs</p>
+
+</div>
+</div>
+
+<!--s-->
+
+## Docker Architecture | Images
+
+**Docker Images** are immutable, read-only templates used to create containers.
+
+<div class = "col-wrapper">
+<div class="c1" style = "width: 50%">
+
+An image might include an OS, application code, and dependencies required to run an application. Images are built from a series of layers. Each layer represents a modification to the previous layer, allowing for efficient storage and distribution of images.
+
+</div>
+<div class="c2" style = "width: 50%">
+
+<img src="https://miro.medium.com/v2/resize:fit:1400/0*G82uZfX0ozIih3-_" width="100%" style = "border-radius: 10px;">
+<p style="text-align: center; font-size: 0.6em; color: grey;">NordicAPIs</p>
+
+</div>
+</div>
+
+<!--s-->
+
+## Docker Architecture | Containers
+
+**Docker Containers** are running instances of Docker images.
+
+<div class = "col-wrapper">
+<div class="c1" style = "width: 50%">
+
+They can be started, stopped, moved, or deleted using Docker commands. Containers are isolated from each other and the host system, but they share the host OS's kernel. This makes them lightweight and efficient.
+
+</div>
+<div class="c2" style = "width: 50%">
+
+<img src="https://miro.medium.com/v2/resize:fit:1400/0*G82uZfX0ozIih3-_" width="100%" style = "border-radius: 10px;">
+<p style="text-align: center; font-size: 0.6em; color: grey;">NordicAPIs</p>
+
+</div>
+</div>
+
+<!--s-->
+
+## Docker Architecture | Registries
+
+**Docker Registries** store Docker images. A popular public registry is Docker Hub, but private registries can also be used. Docker images can be pushed to and pulled from registries, allowing for easy distribution and sharing of images.
+
+<div class = "col-wrapper">
+<div class="c1" style = "width: 50%">
+
+Other examples of registries include:
+
+- **Amazon Elastic Container Registry (ECR)**
+- **Google Container Registry (GCR)**
+- **Azure Container Registry (ACR)**
+
+</div>
+<div class="c2" style = "width: 50%">
+
+<img src="https://miro.medium.com/v2/resize:fit:1400/0*G82uZfX0ozIih3-_" width="100%" style = "border-radius: 10px;">
+<p style="text-align: center; font-size: 0.6em; color: grey;">NordicAPIs</p>
+
+</div>
+</div>
+
+<!--s-->
+
+## Docker Architecture | Core Concepts
+
+### Namespaces and Control Groups
+Docker uses Linux namespaces to provide isolation for containers and control groups (cgroups) to limit resource usage.
+
+### Union File System
+Layers are used to create Docker images. Each layer is a modification over the previous one, which allows efficient storage and reduced bandwidth usage when distributing an image. A Union File System (UFS) combines these layers into a single view (union) of the file system.
+
+<div class = "col-wrapper" style = "font-size: 0.8em;">
+<div class="c1" style = "width: 50%">
+
+> <span style="font-style: normal;"> **Namespaces**: Isolate containers from each other and the host system. </span>
+
+> <span style="font-style: normal;"> **Control Groups (cgroups)**: Limit resource usage for containers. </span>
+
+</div>
+<div class="c2" style = "width: 50%">
+
+> <span style="font-style: normal;"> **Union File System**: Efficiently store and distribute Docker images. </span>
+
+</div>
+</div>
+
+<!--s-->
+
+## Using Docker
+
+1. Installing Docker
+2. Building from a Dockerfile
+3. Running Containers
+
+<!--s-->
+
+## Using Docker | Installing Docker
+
+To start using Docker, you need to install the Docker Engine on your machine. It can be downloaded from the Docker website and is available for various operating systems, including Windows, MacOS, and Linux.
+
+Download Docker Desktop: [Docker Desktop](https://www.docker.com/products/docker-desktop)
+
+<!--s-->
+
+## Using Docker | Building a Dockerfile
+
+<div class = "col-wrapper">
+<div class="c1" style = "width: 50%">
+
+A **Dockerfile** is a text document that contains all the commands needed to assemble a Docker **image**. It starts with a <span class="code-span">FROM</span> instruction that specifies the base image. 
+
+
+Usually, it also includes commands like <span class="code-span">WORKDIR</span>, <span class="code-span">COPY</span>, <span class="code-span">RUN</span>, and <span class="code-span">CMD</span> to set up the environment and run the application.
+
+</div>
+<div class="c2" style = "width: 50%">
+
+```dockerfile
+
+# Use an official Python runtime as a parent image.
+FROM python:3.8-slim
+
+# Set the working directory.
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app.
+COPY . /app
+
+# Install any needed packages specified in requirements.txt.
+# RUN is used to execute commands during the build process.
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Start the application. CMD specifies the command to run when the container starts.
+CMD ["python", "app.py"]
+
 ```
 
-<img src="https://miro.medium.com/v2/resize:fit:1160/format:webp/1*OECM6SWmlhVzebmSuvMtBg.png" width="500" style="margin: 0 auto; display: block;">
-<p style="text-align: center; font-size: 0.6em; color: grey;">Chavan, 2023</p>
-
+</div>
 </div>
 
 <!--s-->
 
-## Why Split on Groups?
+## Dockerfile | Cheatsheet
 
-Imagine we're working with a medical dataset aimed at predicting the likelihood of a patient having a particular disease based on various features, such as age, blood pressure, cholesterol levels, etc.
+Here are some common Dockerfile commands.
 
-### Dataset
-
-- **Patient A:** 
-  - Visit 1: Age 50, Blood Pressure 130/85, Cholesterol 210
-  - Visit 2: Age 51, Blood Pressure 135/88, Cholesterol 215
-
-- **Patient B:**
-  - Visit 1: Age 60, Blood Pressure 140/90, Cholesterol 225
-  - Visit 2: Age 61, Blood Pressure 145/92, Cholesterol 230
-
+| Command | Description |
+|---------|-------------|
+| <span class="code-span">FROM</span> | Specifies the base image to use. |
+| <span class="code-span">WORKDIR</span> | Sets the working directory for subsequent commands. |
+| <span class="code-span">COPY</span> | Copies files from the host to the container. |
+| <span class="code-span">RUN</span> | Executes commands during the build process. |
+| <span class="code-span">CMD</span> | Specifies the command to run when the container starts. |
+| <span class="code-span">EXPOSE</span> | Exposes a port to the host machine. |
+| <span class="code-span">ENV</span> | Sets environment variables. |
+| <span class="code-span">ENTRYPOINT</span> | Configures the container to run as an executable. |
 <!--s-->
 
-## Incorrect Splitting
+## Docker | CLI Cheatsheet
 
-- **Training Set:**
-  - Patient A, Visit 1
-  - Patient B, Visit 1
+Here are some common Docker CLI commands.
 
-- **Testing Set:**
-  - Patient A, Visit 2
-  - Patient B, Visit 2
-
-In this splitting scenario, the model could learn specific patterns from Patient A and Patient B in the training set and then simply recall them in the testing set. Since it has already seen data from these patients, even with slightly different features, **it may perform well without actually generalizing to unseen patients**.
-
-<!--s-->
-
-## Correct Splitting
-
-- **Training Set:**
-  - Patient A, Visit 1
-  - Patient A, Visit 2
-
-- **Testing Set:**
-  - Patient B, Visit 1
-  - Patient B, Visit 2
-
-In these cases, the model does not have prior exposure to the patients in the testing set, ensuring an unbiased evaluation of its performance. It will need to apply its learning to truly "new" data, similar to real-world scenarios where new patients must be diagnosed based on features the model has learned from different patients.
-
-<!--s-->
-
-## Key Takeaways for Group-Based Splitting
-
-- **Independence:** Keeping data separate between training and testing sets maintains the independence necessary for unbiased model evaluation.
-
-- **Generalization:** This approach ensures that the model can generalize its learning from one set of data to another, which is crucial for effective predictions.
+| Command | Description |
+|---------|-------------|
+| <span class="code-span">docker --version</span> | Checks the installed version of Docker. |
+| <span class="code-span">docker pull [image_name]</span> | Pulls an image from a registry. |
+| <span class="code-span">docker build -t [image_name] .</span> | Builds an image from a Dockerfile. |
+| <span class="code-span">docker run [image_name]</span> | Runs a container from an image, common flags include <span class="code-span">-d</span> for detached mode, <span class="code-span">-p</span> for port mapping, and <span class="code-span">-v</span> for volume mounting. |
+| <span class="code-span">docker ps</span> | Lists running containers. |
+| <span class="code-span">docker images</span> | Lists images on the host. |
 
 <!--s-->
 
 <div class="header-slide">
 
-# Linear Regression
+# Case 1 | Onboarding
 
 </div>
 
 <!--s-->
 
-## Linear Regression | Concept
-
-Linear regression attempts to model the relationship between two or more variables by fitting a linear equation to observed data. The components to perform linear regression: 
-
-$$ \widehat{y} = X\beta $$
-
-Where $ \widehat{y} $ is the predicted value, $ X $ is the feature matrix, and $ \beta $ is the coefficient vector. The goal is to find the coefficients that minimize the error between the predicted value and the actual value.
-
-<img src="http://www.stanford.edu/class/stats202/figs/Chapter3/3.1.png" width="600" style="margin: 0 auto; display: block;">
-
-<!--s-->
-
-## Linear Regression | Cost Function
-
-The objective of linear regression is to minimize the cost function $ J(\beta) $:
+## Case 1 | Onboarding
 
 <div class = "col-wrapper">
 <div class="c1" style = "width: 50%">
 
-$$ J(\beta) = \frac{1}{2m} \sum_{i=1}^m (\widehat{y}_i - y_i)^2 $$
+To the right is a dockerfile that will install the course environment and run <span class="code-span">code-server</span> in a container. 
 
-Where $ \widehat{y} = X\beta $ is the prediction. This is most easily solved by finding the normal equation solution:
-
-$$ \beta = (X^T X)^{-1} X^T y $$
-
-The normal equation is derived by setting the gradient of $J(\beta) $ to zero. This is a closed-form solution that can be computed directly.
+This will allow you to run the course environment locally without installing any dependencies to your operating system (Windows, MacOS, Linux).
 
 </div>
-<div class="c2" style = "width: 50%">
+<div class="c2" style = "width: 70%; height: 100%;">
 
-```python
-from sklearn.linear_model import LinearRegression
+```dockerfile
+# Use the official Miniconda3 image as a parent image.
+FROM continuumio/miniconda3
 
-model = LinearRegression()
-model.fit(X_train, y_train)
-model.predict(X_test)
+# Clone the class repository.
+RUN apt-get update && apt-get install -y git curl
+RUN git clone https://github.com/drc-cs/SPRING25-DATA-INTENSIVE-SYSTEMS.git
+
+# Set the working directory.
+WORKDIR /SPRING25-DATA-INTENSIVE-SYSTEMS
+
+# Create a new Conda environment from the environment.yml file.
+RUN conda env create -f environment.yml
+
+# Install vscode server.
+RUN curl -fsSL https://code-server.dev/install.sh | bash
+
+# Add code-server to PATH
+ENV PATH="/root/.local/bin:${PATH}"
+
+# Expose the port that the server is running on.
+EXPOSE 8080
+
+# Run the code-server command when the container starts.
+CMD ["code-server", "--auth", "none", "--bind-addr", "0.0.0.0:8080", "."]
+
 ```
 
-<img src="http://www.stanford.edu/class/stats202/figs/Chapter3/3.1.png" width="100%">
-
 </div>
 </div>
 
 <!--s-->
 
-## Linear Regression | Normal Equation Notes
+## Case 1 | Running the Environment
 
-### Adding a Bias Term
+Since we run the <span class="code-span">code-server</span> on port 8080, we need to map the container's port to the host machine. We can do this using the <span class="code-span">-p</span> flag. Here we mapped the container's port 8080 to the host machine's port 8080. Since code-server is already running within the docker container, we can access it by visiting <span class="code-span">localhost:8080</span> in your browser.
 
-Practically, if we want to include a bias term in the model, we can add a column of ones to the feature matrix $ X $.
-
-$$ \widehat{y} = X\beta $$
-
-### Gradient Descent
-
-For large datasets, the normal equation can be computationally expensive. Instead, we can use gradient descent to minimize the cost function iteratively. We'll talk about gradient descent within the context of logistic regression later today.
-
-<!--s-->
-
-## Linear Regression | Regression Model Evaluation
-
-To evaluate a regression model, we can use metrics such as mean squared error (MSE), mean absolute error (MAE), mean absolute percentage error (MAPE), and R-squared.
-
-<div style = "font-size: 0.8em;">
-
-| Metric | Formula | Notes |
-| --- | --- | --- |
-| Mean Squared Error (MSE) | `$\frac{1}{m} \sum_{i=1}^m (\widehat{y}_i - y_i)^2$` | Punishes large errors more than small errors. |
-| Mean Absolute Error (MAE) | `$\frac{1}{m} \sum_{i=1}^m \|\widehat{y}_i - y_i\|$` | Less sensitive to outliers than MSE. |
-| Mean Absolute Percentage Error (MAPE) | `$\frac{1}{m} \sum_{i=1}^m \left \| \frac{\widehat{y}_i - y_i}{y_i} \right\| \times 100$` | Useful for comparing models with different scales. |
-| R-squared | `$1 - \frac{\sum(\widehat{y}_i - y_i)^2}{\sum(\bar{y} - y_i)^2}$` | Proportion of the variance in the dependent variable that is predictable from the independent variables. |
-
-</div>
-
-<!--s-->
-
-## Linear Regression | Pros and Cons
-
-### Pros
-
-- Simple and easy to understand.
-- Fast to train.
-- Provides a good, very interpretable baseline model.
-
-### Cons
-
-- Assumes a linear relationship between the features and the target variable.
-- Sensitive to outliers.
-
-<!--s-->
-
-## Linear Regression | A Brief Note on Regularization
-
-<div style = "font-size: 0.8em;">
-Regularization is a technique used to prevent overfitting by adding a penalty term to the cost function. The two most common types of regularization are L1 (Lasso) and L2 (Ridge) regularization.
-
-Recall that the cost function for linear regression is:
-
-$$ J(\beta) = \frac{1}{2m} \sum_{i=1}^m (\widehat{y}_i - y_i)^2 $$
-
-**L1 Regularization**: Adds the absolute value of the coefficients to the cost function. This effectively performs feature selection by pushing some coefficients towards zero.
-
-$$ J(\beta) = J(\beta) + \lambda \sum_{j=1}^n |\beta_j| $$
-
-**L2 Regularization**: Adds the square of the coefficients to the cost function. This shrinks the coefficients, but does not set them to zero. This is useful when all features are assumed to be relevant.
-
-$$ J(\beta) = J(\beta) + \lambda \sum_{j=1}^n \beta_j^2 $$
-</div>
-
-<!--s-->
-
-## Linear Regression | A Brief Note on P-Values
-
-P-values are used to test the null hypothesis that the coefficient is equal to zero. A small p-value (typically < 0.05) indicates strong evidence against the null hypothesis, so you reject the null hypothesis. In linear regression, this is used to determine which features are significant (i.e., have a non-zero coefficient). The null hypothesis is that the feature is not significant.
-
-<!--s-->
-
-## L.07 | Q.01
+As long as the container is running, you can access the course environment by visiting <span class="code-span">localhost:8080</span> in your browser at any time. In practice, we can host a code-server instance on a remote server with many more resources and access it from anywhere.
 
 <div class = "col-wrapper">
-
 <div class="c1" style = "width: 50%">
 
-When is L2 regularization (Ridge) preferred over L1 regularization (Lasso)?
+```bash
+# Build the Docker image.
+docker build -t dis .
 
-A. When all features are assumed to be relevant.<br>
-B. When some features are assumed to be irrelevant.
+# Run the Docker container on port 8080 (local).
+docker run -p 8080:8080 dis
+```
 
 </div>
-
 <div class="c2" style = "width: 50%">
 
-<iframe src="https://drc-cs-9a3f6.firebaseapp.com/?label=L.07 | Q.01" width="100%" height="100%" style="border-radius: 10px;"></iframe>
+<img src="https://user-images.githubusercontent.com/35271042/118224532-3842c400-b438-11eb-923d-a5f66fa6785a.png" width="100%">
 
 </div>
-
 </div>
 
 <!--s-->
 
 <div class="header-slide">
 
-# Logistic Regression
+# Case 2 | Deployment
 
 </div>
-
-<!--s-->
-
-## Logistic Regression | Concept
-
-Logistic regression measures the relationship between the categorical dependent variable and one or more independent variables by estimating probabilities using a logistic function.
-
-$$ \sigma(z) = \frac{1}{1 + e^{-z}} $$
-
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*G3imr4PVeU1SPSsZLW9ghA.png" width="400" style="margin: 0 auto; display: block;">
-<span style="font-size: 0.8em; text-align: center; display: block; color: grey;">Joshi, 2019</span>
-
-<!--s-->
-
-## Logistic Regression | Formula
-
-This model is based on the sigmoid function $\sigma(z)$:
-
-$$ \sigma(z) = \frac{1}{1 + e^{-z}} $$
-
-Where 
-
-$$ z = X\beta $$
-
-Note that $\sigma(z)$ is the probability that the dependent variable is 1 given the input $X$. Consider the similar form of the linear regression model:
-
-$$ \widehat{y} = X\beta $$
-
-The key difference is that the output of logistic regression is passed through the sigmoid function to obtain a value between 0 and 1, which can be interpreted as a probability. This works because the sigmoid function maps any real number to the range [0, 1]. While linear regression predicts the value of the dependent variable, logistic regression predicts the probability that the dependent variable is 1. 
-
-<!--s-->
-
-## Logistic Regression | No Closed-Form Solution
-
-In linear regression, we can calculate the optimal coefficients $\beta$ directly. However, in logistic regression, we cannot do this because the sigmoid function is non-linear. This means that there is no closed-form solution for logistic regression.
-
-Instead, we use gradient descent to minimize the cost function. Gradient descent is an optimization algorithm that iteratively updates the parameters to minimize the cost function, and forms the basis of many machine learning algorithms.
-
-<img src="https://machinelearningspace.com/wp-content/uploads/2023/01/Gradient-Descent-Top2-1024x645.png" width="500" style="margin: 0 auto; display: block;">
-<p style="text-align: center; font-size: 0.6em; color: grey;">machinelearningspace.com (2013)</p>
-
-<!--s-->
-
-## Logistic Regression | Cost Function
-
-The cost function used in logistic regression is the cross-entropy loss:
-
-$$ J(\beta) = -\frac{1}{m} \sum_{i=1}^m [y_i \log(\widehat{y}_i) + (1 - y_i) \log(1 - \widehat{y}_i)] $$
-
-$$ \widehat{y} = \sigma(X\beta) $$
-
-Let's make sure we understand the intuition behind the cost function $J(\beta)$.
-
-If the true label ($y$) is 1, we want the predicted probability ($\widehat{y}$) to be close to 1. If the true label ($y$) is 0, we want the predicted probability ($\widehat{y}$) to be close to 0. The cost goes up as the predicted probability diverges from the true label.
-
-<!--s-->
-
-## Logistic Regression | Gradient Descent
-
-To minimize $ J(\beta) $, we update $ \beta $ iteratively using the gradient of $ J(\beta) $:
-
-<div class = "col-wrapper">
-<div class="c1" style = "width: 50%; font-size: 0.8em;">
-
-$$ \beta := \beta - \alpha \frac{\partial J}{\partial \beta} $$
-
-Where $ \alpha $ is the learning rate, and the gradient $ \frac{\partial J}{\partial \beta} $ is:
-
-$$ \frac{\partial J}{\partial \beta} = \frac{1}{m} X^T (\sigma(X\beta) - y) $$
-
-Where $ \sigma(X\beta) $ is the predicted probability, $ y $ is the true label, $ X $ is the feature matrix, $ m $ is the number of instances, $ \beta $ is the coefficient vector, and $ \alpha $ is the learning rate.
-
-This is a simple concept that forms the basis of many gradient-based optimization algorithms, and is widely used in deep learning. 
-
-Similar to linear regression -- if we want to include a bias term, we can add a column of ones to the feature matrix $ X $.
-
-</div>
-<div class="c2 col-centered" style = "width: 50%">
-
-<img src="https://machinelearningspace.com/wp-content/uploads/2023/01/Gradient-Descent-Top2-1024x645.png" width="500" style="margin: 0 auto; display: block;">
-<p style="text-align: center; font-size: 0.6em; color: grey;">machinelearningspace.com (2013)</p>
-
-</div>
-</div>
-
-<!--s-->
-
-## L.07 | Q.02
-
-<div class = "col-wrapper">
-<div class="c1" style = "width: 50%">
-
-Okay, so let's walk through an example. Suppose you have already done the following: 
-
-1. Obtained the current prediction ($\widehat{y}$) with $ \sigma(X\beta) $.
-2. Calculated the gradient $ \frac{\partial J}{\partial \beta} $.
-
-What do you do next?
-
-
-</div>
-<div class="c2" style = "width: 50%">
-
-<iframe src="https://drc-cs-9a3f6.firebaseapp.com/?label=L.07 | Q.02" width="100%" height="100%" style="border-radius: 10px;"></iframe>
-
-</div>
-</div>
-
-<!--s-->
-
-## Logistic Regression | Classifier
-
-Once we have the optimal coefficients, we can use the logistic function to predict the probability that the dependent variable is 1. 
-
-We can then use a threshold to classify the instance as 0 or 1 (usually 0.5). The following code snippet shows how to use the scikit-learn library to fit a logistic regression model and make predictions.
-
-
-```python
-from sklearn.linear_model import LogisticRegression
-
-X = [[1, 2], [2, 3], [3, 4], [4, 5]]
-y = [0, 0, 1, 1]
-logistic_regression_model = LogisticRegression()
-logistic_regression_model.fit(X_train, y_train)
-logistic_regression_model.predict([[3.5, 3.5]])
-```
-
-```python
-array([[0.3361201, 0.6638799]])
-```
-
-<!--s-->
-
-## L.07 | Q.03
-
-<div class = "col-wrapper">
-<div class="c1" style = "width: 50%">
-
-Our logistic regression model was trained with $X = [[1, 2], [2, 3], [3, 4], [4, 5]]$ and $y = [0, 0, 1, 1]$. We then made a prediction for the point $[3.5, 3.5]$.
-
-What does this output represent?
-
-```python
-array([[0.3361201, 0.6638799]])
-```
-
-</div>
-<div class="c2" style = "width: 50%">
-<iframe src="https://drc-cs-9a3f6.firebaseapp.com/?label=L.07 | Q.03" width="100%" height="100%" style="border-radius: 10px;"></iframe>
-</div>
-</div>
-
-<!--s-->
-
-## Logistic Regression | Classification Model Evaluation
-
-To evaluate a binary classification model like this, we can use metrics such as accuracy, precision, recall, F1 score, and ROC-AUC.
-
-| Metric | Formula | Notes |
-| --- | --- | --- | 
-| Accuracy | $\frac{TP + TN}{TP + TN + FP + FN}$ | Easy to interpret but flawed.
-| Precision | $\frac{TP}{TP + FP}$ | Useful when the cost of false positives is high. |
-| Recall | $\frac{TP}{TP + FN}$ | Useful when the cost of false negatives is high. |
-| F1 Score | $2 \times \frac{Precision \times Recall}{Precision + Recall}$ | Harmonic mean of precision and recall. | 
-| ROC-AUC | Area under the ROC curve. | Useful for imbalanced datasets. |
-
-<!--s-->
-
-## Logistic Regression | Pros and Cons
-
-### Pros
-
-- Simple and easy to understand.
-- Fast to train.
-- Provides a good, very interpretable baseline model.
-
-### Cons
-
-- Assumes a linear relationship between the features and the target variable.
-- Sensitive to outliers.
-- Does not handle non-linear relationships well.
-
-<!--s-->
-
-## Summary
-
-- We discussed the importance of splitting data into training, validation, and test sets.
-- We delved Linear Regression and Logistic Regression with Gradient Descent, exploring practical implementations and theoretical foundations.
-- Understanding these foundational concepts is crucial for advanced machine learning and model fine-tuning! 
 
 <!--s-->
 
@@ -551,12 +558,8 @@ To evaluate a binary classification model like this, we can use metrics such as 
     <div style="font-size: 0.8em; left: 0; width: 60%; position: absolute;">
 
   # Exit Poll
-  ## On a scale of 1-5, how confident are you with the following methods:
-
-
-  1. Linear Regression
-  2. Logistic Regression
-
+  ## On a scale of 1-5, how confident are you with working with Docker?
+  
   </div>
   </div>
   <div class="c2" style="width: 50%; height: 100%;">

@@ -12,6 +12,8 @@ def impute_numerical_values(X: np.ndarray) -> np.ndarray:
         - estimator: RandomForestRegressor with n_estimators=10 and random_state=0
         - imputer: IterativeImputer with max_iter=10.
 
+    NOTE: Do not use additional parameters besides the ones noted above.
+
     Args:
         X (numpy.ndarray): Input data with missing values.
     
@@ -75,7 +77,7 @@ def minmax_scale_with_numpy(x: np.ndarray) -> np.ndarray:
 def binarize_islands(islands: list[str]) -> list[int]:
     """Convert a list of island names to binary values.
 
-    NOTE: Please use 1 for 'Biscoe', 0 for 'Adelie'. 
+    NOTE: Please use 1 for 'Biscoe', 0 for 'Dream'.
     Return a list of ints, not a numpy array.
 
     Args:
@@ -94,11 +96,12 @@ def generate_one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
 
     NOTE: Use the `pd.get_dummies` function to create one-hot encoded columns 
     for the 'species' column. Please ensure you use the `dtype` parameter to set the data 
-    type of the new columns to 'int'. The end result should be a DataFrame like this:
+    type of the new columns to 'int'. The end result should be a DataFrame columns with 
+    (including the original columns):
 
-    | species_Adelie | species_Chinstrap | species_Gentoo |
-    |----------------|-------------------|----------------|
-    | 0              | 1                 | 0              |
+   | ... | species_Adelie | species_Chinstrap | species_Gentoo |
+   | --- |----------------|-------------------|----------------|
+   | ... | 0              | 1                 | 0              |
 
     
     Args:
