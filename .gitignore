@@ -2,3 +2,4 @@
 venv/
 homeworks/.env
 __pycache__
+homeworks/H03/.env

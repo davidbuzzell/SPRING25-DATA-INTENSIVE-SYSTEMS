@@ -17,23 +17,21 @@ def impute_numerical_values(X: np.ndarray) -> np.ndarray:
     
     Returns:
         numpy.ndarray: Imputed data with missing values filled in.
-    """
 
+    """
     # 1. Init a RandomForestRegressor for the imputer. 
     # Make sure you use 10 estimators and set the random state to 0.
- 
+    regressor = RandomForestRegressor(n_estimators=10, random_state=0)
 
     # 2. Init the imputer with the estimator. Use max_iter=10.
-
+    # DO NOT USE random_state=0
+    imputer = IterativeImputer(regressor, max_iter=10)
 
     # 3. Fit the imputer on the dataset.
-
+    imputer.fit(X)
 
     # 4. Transform the dataset to impute missing values.
-
-
-    raise NotImplementedError("Please implement the impute_numerical_values function in preprocessing.py.")
-
+    return imputer.transform(X)
 
 
 def standard_scale_with_numpy(x: np.ndarray) -> np.ndarray:
@@ -50,8 +48,8 @@ def standard_scale_with_numpy(x: np.ndarray) -> np.ndarray:
     
     Returns:
         numpy.ndarray: Scaled data.
+    
     """
-
     return (x - x.mean()) / x.std()
 
 
@@ -69,8 +67,8 @@ def minmax_scale_with_numpy(x: np.ndarray) -> np.ndarray:
     
     Returns:
         numpy.ndarray: Scaled data.
-    """
 
+    """
     return (x - x.min()) / (x.max() - x.min())
 
 
@@ -85,9 +83,9 @@ def binarize_islands(islands: list[str]) -> list[int]:
     
     Returns:
         list[int]: List of binary values.
-    """
-    raise NotImplementedError("Please implement the binarize_islands function in preprocessing.py.")
 
+    """
+    return [1 if isl == 'Biscoe' else 0 for isl in islands]
 
 
 def generate_one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
@@ -108,9 +106,9 @@ def generate_one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
         
     Returns:
         pd.DataFrame: A new DataFrame with one-hot encoded columns for each species.
-    """
-    raise NotImplementedError("Please implement the generate_one_hot_encoding function in preprocessing.py.")
 
+    """
+    return pd.get_dummies(df, columns=["species"], dtype="int")
 
 
 def reorder_columns(df: pd.DataFrame) -> pd.DataFrame:
@@ -125,8 +123,8 @@ def reorder_columns(df: pd.DataFrame) -> pd.DataFrame:
     
     Returns:
         pd.DataFrame: The reordered DataFrame with label columns at the end.
-    """
 
+    """
     # Do not change the order of these columns.
     NEW_COLUMN_ORDER = [
         "bill_length_mm",
@@ -140,5 +138,4 @@ def reorder_columns(df: pd.DataFrame) -> pd.DataFrame:
     ]
 
     # Reorder the columns of the DataFrame to match the new column order.
-    
-    raise NotImplementedError("Please implement the reorder_columns function in preprocessing.py.")
+    return df[NEW_COLUMN_ORDER]
