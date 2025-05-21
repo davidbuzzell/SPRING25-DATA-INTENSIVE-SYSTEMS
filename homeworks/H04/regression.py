@@ -27,7 +27,10 @@ def split_data(X: np.array, test_size: float=0.2,
     """
 
     # 1. Use the train_test_split function from sklearn to split the data.
-    raise NotImplementedError("Please implement the split_data function.")
+    return train_test_split(X,
+                            test_size=test_size,
+                            random_state=random_state,
+                            shuffle=shuffle)
 
 def standardize(x_train: np.array, x_test: np.array) -> Tuple[np.array, np.array]:
     """Standardize the dataset using StandardScaler from sklearn.
@@ -45,20 +48,21 @@ def standardize(x_train: np.array, x_test: np.array) -> Tuple[np.array, np.array
     """
 
     # 1. Create a StandardScaler object.
-
+    scaler = StandardScaler()
 
     # 2. Fit the scaler to the training data using scaler.fit.
+    fit_scaler = scaler.fit(x_train)
 
 
     # 3. Transform the training data using scaler.transform.
-  
+    train_data = fit_scaler.transform(x_train)
 
     # 4. Transform the testing data using scaler.transform.
+    test_data = fit_scaler.transform(x_test)
 
 
     # 5. Return the standardized datasets and the scaler.
-
-    raise NotImplementedError("Please implement the standardize function.")
+    return train_data, test_data
 
 
 def linear_regression(X: np.array, y: np.array) -> np.array:
@@ -77,14 +81,15 @@ def linear_regression(X: np.array, y: np.array) -> np.array:
 
     # 1. Concatenate the bias term to X using np.hstack.
     # NOTE: By convention, the bias term is the first column of the weights.
-    
+    nrows, _ = X.shape
+    X_bias = np.hstack((X, np.ones((nrows, 1))))
 
     # 2. Calculate the weights using the normal equation.
-  
+    theta = np.matmul(np.linalg.inv(np.matmul(X_bias.transpose(), X_bias)),
+                      np.matmul(X_bias.transpose(), y))
 
     # 3. Return the weights.
-
-    raise NotImplementedError("Please implement the linear_regression function.")
+    return theta
 
 
 def linear_regression_predict(X: np.array, weights: np.array) -> np.array:
@@ -102,14 +107,14 @@ def linear_regression_predict(X: np.array, weights: np.array) -> np.array:
     """
     # 1. Concatenate the bias term to X using np.hstack.
     # By convention, the bias term is the first column of the weights.
-
+    nrows, _ = X.shape
+    X_bias = np.hstack((X, np.ones((nrows, 1))))
     
     # 2. Calculate the predictions.
-
+    y_hat = np.matmul(X_bias, weights)
 
     # 3. Return the predictions.
-
-    raise NotImplementedError("Please implement the linear_regression_predict function.")
+    return y_hat
     
 def mean_squared_error(y_true: np.array, y_pred: np.array) -> float:
     """Calculate the mean squared error.
@@ -123,5 +128,4 @@ def mean_squared_error(y_true: np.array, y_pred: np.array) -> float:
     Returns:
         float: The mean squared error.
     """
-
-    raise NotImplementedError("Please implement the mean_squared_error function.")
+    return np.sum((y_true - y_pred) ** 2) / y_true.shape[0]
