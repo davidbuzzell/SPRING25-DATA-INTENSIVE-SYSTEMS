@@ -1,5 +1,9 @@
 *.pyc
 venv/
-homeworks/.env
+.env
 __pycache__
+homeworks/H01/.env
+homeworks/H02/.env
 homeworks/H03/.env
+homeworks/H04/.env
+homeworks/H05/.env
